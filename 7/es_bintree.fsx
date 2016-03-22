@@ -342,3 +342,31 @@ let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
 let intTree = insertFromList(intList,Null) ;;
 let strTree1 = insertFromList(strList1,Null) ;;
 let strTree2 = insertFromList(strList2,strTree1) ;;
+
+(*  
+    RICERCA DI UN ELEMENTO
+    ======================
+
+    Definire la funzione ricorsiva
+
+     search1 : 'a * 'a binTree -> bool   when 'a : comparison
+
+    definita come search (vedi esercizio sopra), 
+    ma in cui si assume che l'albero sia un albero binario di ricerca 
+    (quindi, la ricerca puo' essere effettuata in maniera efficiente).
+
+    Verificarne la correttezza facendo dei test sugli alberi gia' definiti.
+*)
+
+let rec search1 (a,btree) =
+    match btree with
+    | Null -> false
+    | Node(x,l,r) when a=x -> true
+    | Node(x,l,r) -> 
+        if a<x then search(a,l)
+        else  search(a,r) ;;
+
+// test
+search1(100,intTree);; // true
+search1("ciliegia",strTree2);; //true
+search("mango", strTree1);; //false
