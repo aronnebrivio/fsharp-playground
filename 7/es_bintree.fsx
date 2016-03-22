@@ -242,3 +242,194 @@ let rec getElement (path, btree) =
             if x=L then getElement(xs,l)
             else getElement(xs,r) ;;
 
+
+
+
+
+(*
+=================================================================================
+
+*** ESERCIZI PARTE 2 (ALBERI BINARI DI RICERCA)  ***
+*)
+(*
+    INSERIMENTO DI UN ELEMENTO
+    ==========================
+
+    i) Definire la funzione ricorsiva
+
+       insert :  'a  * 'a binTree -> 'a binTree    when 'a : comparison
+                                                   
+
+    che data la coppia   
+
+     ( x : 'a  , btree : 'a binTree ) 
+
+    dove btree e' un albero binario di ricerca,
+    restituisce l'albero binario di ricerca ottenuto inserendo x in btree;
+    se x e' gia' nell'albero, va restituito l'albero di partenza
+    (non sono ammessi nodi duplicati).
+*)
+(*let rec insert (x, btree) =
+    match btree with
+    | Null -> Node(x, Null, Null)
+    | Node(r, Null, Null) -> 
+        if x<r then Node(r, Node(x,Null,Null), Null)
+        elif x>r then Node(r, Null, Node(x,Null,Null))
+        else Node(r, Null, Null)
+    | Node(r,left,right) ->
+        if x<r then insert(x, left)
+        else insert(x, right) ;;*)
+let rec insert (x,btree) =
+    match btree with
+    | Null -> Node(x,Null,Null)
+    | Node(r,left,right) when x<r -> Node(r, insert(x,left), right)
+    | Node(r,left,right) when x>r -> Node(r, left, insert(x,right)) 
+    | Node(_,_,_) as n -> n;;
+
+// es
+let t9 = Node(8, Node(6,Null,Node(7,Null,Null)),Null);;
+insert(5,t9);; // Node(8, Node(6,Node(5,Null,Null),Node(7,Null,Null)), Null)
+insert(6,t9);;
+insert(10,t9);;
+
+(*
+    ii) Definire la funzione ricorsiva 
+
+       insertFromList : 'a list * 'a binTree -> 'a binTree    when 'a : comparison
+
+    che, data la coppia  
+
+       ( ls: 'a list , btree : 'a binTree ) 
+
+    dove btree e' un albero binario di ricerca, restituisce l'albero binario di ricerca 
+    ottenuto inserendo gli elementi della lista ls nell'albero btree.
+    Gli elementi vanno inseriti nell'ordine in cui compaiono nella lista.
+    (notare che, cambiando l'ordine con cui gli elementi sono inseriti, 
+    l'albero di ricerca ottenuto puo' risultare diverso).
+*)
+let rec insertFromList (list, btree) =
+    match list with
+    | [] -> btree
+    | [x] -> insert(x,btree)
+    | x::xs -> insertFromList(xs, insert(x,btree)) ;;
+
+// es
+insertFromList([5;6;10],t9);; 
+// -> Node (8,Node (6,Node (5,Null,Null),Node (7,Null,Null)),Node (10,Null,Null))
+
+(*
+    iii) Definire le seguenti liste:
+
+    let intList = [ 20 ; 10 ; 60 ; 15 ; 40 ; 100 ; 30 ; 50 ; 70 ; 35 ; 42 ; 58 ; 75 ; 32 ; 37 ] ;;
+    let strList1 = [ "pesca" ; "banana" ; "uva" ; "albicocca" ; "nocciola" ; "ribes" ] ;;
+    let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
+     
+    Costruire i seguenti alberi di ricerca:
+
+    - intTree : albero ottenuto partendo dall'albero vuoto e  inserendo gli elementi di intList 
+                (albero di tipo 'int binTree')
+
+    - strTree1:  albero ottenuto partendo dall'albero vuoto e inserendo gli elementi di strList1 
+                 (albero di tipo 'string binTree')
+
+    - strTree2: albero ottenuto inserendo in strTree1 gli elementi di strList2 
+                (albero di tipo 'string binTree')
+*)
+let intList = [ 20 ; 10 ; 60 ; 15 ; 40 ; 100 ; 30 ; 50 ; 70 ; 35 ; 42 ; 58 ; 75 ; 32 ; 37 ] ;;
+let strList1 = [ "pesca" ; "banana" ; "uva" ; "albicocca" ; "nocciola" ; "ribes" ] ;;
+let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
+
+let intTree = insertFromList(intList,Null) ;;
+let strTree1 = insertFromList(strList1,Null) ;;
+let strTree2 = insertFromList(strList2,strTree1) ;;
+
+(*  
+    RICERCA DI UN ELEMENTO
+    ======================
+
+    Definire la funzione ricorsiva
+
+     search1 : 'a * 'a binTree -> bool   when 'a : comparison
+
+    definita come search (vedi esercizio sopra), 
+    ma in cui si assume che l'albero sia un albero binario di ricerca 
+    (quindi, la ricerca puo' essere effettuata in maniera efficiente).
+
+    Verificarne la correttezza facendo dei test sugli alberi gia' definiti.
+*)
+
+let rec search1 (a,btree) =
+    match btree with
+    | Null -> false
+    | Node(x,l,r) when a=x -> true
+    | Node(x,l,r) -> 
+        if a<x then search(a,l)
+        else  search(a,r) ;;
+
+// test
+search1(100,intTree);; // true
+search1("ciliegia",strTree2);; //true
+search("mango", strTree1);; //false
+
+(*
+    RICERCA MINIMO ELEMENTO
+    =======================
+
+    Definire la funzione ricorsiva
+
+       min : 'a binTree -> 'a option
+
+    che, dato un albero binario di ricerca btree, restituisce il minimo elemento dell'albero;
+    piu' precisamente,  se btree e' vuoto, la funzione  restituisce None;
+    altrimenti la funzione restituisce 'Some m', dove m e' il minimo elemento di btree.
+
+    Notare che in un albero di ricerca il minimo elemento si trova scendendo verso sinistra 
+    fin che si puo'.
+*)
+let rec min btree =
+    match btree with
+    | Null -> "None"
+    | Node(x,Null,_) -> "Some " + sprintf "%i" x
+    | Node(x,l,_) -> min l ;;
+
+// test
+min intTree ;;   //   Some 10
+min strTree2;;   //  Some "albicocca" =====> PROBLEMA CON IL TIPO (sprintf "%i" richiede un int)
+min ( Null : int binTree) ;; // None
+
+(*
+    ESTRAZIONE SOTTOALBERO
+    ======================
+
+    Definire la funzione ricorsiva
+
+      subtree : 'a * 'a binTree -> 'a binTree when 'a : comparison
+
+    che, data la coppia  
+
+       ( x: 'a , btree : 'a binTree ) 
+
+    con btree albero binario di ricerca,
+    restituisce il sottoalbero di btree con radice x. 
+    Se x non compare in tree, va restituito l'abero vuoto.
+*)
+let rec subtree (x,btree) =
+    match btree with
+    | Null -> Null
+    | Node(v,Null,Null) -> 
+        if x=v then Node(v,Null,Null)
+        else Null
+    | Node(v,l,r) ->
+        if x<v then subtree(x,l)
+        elif x>v then subtree(x,r) 
+        else Node(v,l,r);;
+
+let m1 = min ( subtree(10, intTree) )  ;;    // Some 10
+let m2 = min ( subtree(15, intTree) )  ;;    // Some 15
+let m3 = min ( subtree(60, intTree) )  ;;    // Some 30
+let m4 = min ( subtree(40, intTree) ) ;;     // Some 30
+let m5 = min ( subtree(100, intTree) ) ;;    // Some 70
+let m6 = min ( subtree(1000, intTree) ) ;;   // None
+// ------
+let m7 = min ( ( subtree ("limone",  strTree2) ) ) ;;  //  Some "ciliegia"
+let m8 = min ( ( subtree ("ribes",  strTree2) ) )  ;;  // Some "ribes"
