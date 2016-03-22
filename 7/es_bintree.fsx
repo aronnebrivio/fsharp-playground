@@ -316,3 +316,29 @@ let rec insertFromList (list, btree) =
 // es
 insertFromList([5;6;10],t9);; 
 // -> Node (8,Node (6,Node (5,Null,Null),Node (7,Null,Null)),Node (10,Null,Null))
+
+(*
+    iii) Definire le seguenti liste:
+
+    let intList = [ 20 ; 10 ; 60 ; 15 ; 40 ; 100 ; 30 ; 50 ; 70 ; 35 ; 42 ; 58 ; 75 ; 32 ; 37 ] ;;
+    let strList1 = [ "pesca" ; "banana" ; "uva" ; "albicocca" ; "nocciola" ; "ribes" ] ;;
+    let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
+     
+    Costruire i seguenti alberi di ricerca:
+
+    - intTree : albero ottenuto partendo dall'albero vuoto e  inserendo gli elementi di intList 
+                (albero di tipo 'int binTree')
+
+    - strTree1:  albero ottenuto partendo dall'albero vuoto e inserendo gli elementi di strList1 
+                 (albero di tipo 'string binTree')
+
+    - strTree2: albero ottenuto inserendo in strTree1 gli elementi di strList2 
+                (albero di tipo 'string binTree')
+*)
+let intList = [ 20 ; 10 ; 60 ; 15 ; 40 ; 100 ; 30 ; 50 ; 70 ; 35 ; 42 ; 58 ; 75 ; 32 ; 37 ] ;;
+let strList1 = [ "pesca" ; "banana" ; "uva" ; "albicocca" ; "nocciola" ; "ribes" ] ;;
+let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
+
+let intTree = insertFromList(intList,Null) ;;
+let strTree1 = insertFromList(strList1,Null) ;;
+let strTree2 = insertFromList(strList2,strTree1) ;;
