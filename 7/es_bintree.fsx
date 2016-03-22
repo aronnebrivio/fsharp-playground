@@ -370,3 +370,29 @@ let rec search1 (a,btree) =
 search1(100,intTree);; // true
 search1("ciliegia",strTree2);; //true
 search("mango", strTree1);; //false
+
+(*
+    RICERCA MINIMO ELEMENTO
+    =======================
+
+    Definire la funzione ricorsiva
+
+       min : 'a binTree -> 'a option
+
+    che, dato un albero binario di ricerca btree, restituisce il minimo elemento dell'albero;
+    piu' precisamente,  se btree e' vuoto, la funzione  restituisce None;
+    altrimenti la funzione restituisce 'Some m', dove m e' il minimo elemento di btree.
+
+    Notare che in un albero di ricerca il minimo elemento si trova scendendo verso sinistra 
+    fin che si puo'.
+*)
+let rec min btree =
+    match btree with
+    | Null -> "None"
+    | Node(x,Null,_) -> "Some " + sprintf "%i" x
+    | Node(x,l,_) -> min l ;;
+
+// test
+min intTree ;;   //   Some 10
+min strTree2;;   //  Some "albicocca" =====> PROBLEMA CON IL TIPO (sprintf "%i" richiede un int)
+min ( Null : int binTree) ;; // None
