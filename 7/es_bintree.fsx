@@ -242,3 +242,52 @@ let rec getElement (path, btree) =
             if x=L then getElement(xs,l)
             else getElement(xs,r) ;;
 
+
+
+
+
+(*
+=================================================================================
+
+*** ESERCIZI PARTE 2 (ALBERI BINARI DI RICERCA)  ***
+*)
+(*
+    INSERIMENTO DI UN ELEMENTO
+    ==========================
+
+    i) Definire la funzione ricorsiva
+
+       insert :  'a  * 'a binTree -> 'a binTree    when 'a : comparison
+                                                   
+
+    che data la coppia   
+
+     ( x : 'a  , btree : 'a binTree ) 
+
+    dove btree e' un albero binario di ricerca,
+    restituisce l'albero binario di ricerca ottenuto inserendo x in btree;
+    se x e' gia' nell'albero, va restituito l'albero di partenza
+    (non sono ammessi nodi duplicati).
+*)
+(*let rec insert (x, btree) =
+    match btree with
+    | Null -> Node(x, Null, Null)
+    | Node(r, Null, Null) -> 
+        if x<r then Node(r, Node(x,Null,Null), Null)
+        elif x>r then Node(r, Null, Node(x,Null,Null))
+        else Node(r, Null, Null)
+    | Node(r,left,right) ->
+        if x<r then insert(x, left)
+        else insert(x, right) ;;*)
+let rec insert (x,btree) =
+    match btree with
+    | Null -> Node(x,Null,Null)
+    | Node(r,left,right) when x<r -> Node(r, insert(x,left), right)
+    | Node(r,left,right) when x>r -> Node(r, left, insert(x,right)) 
+    | Node(_,_,_) as n -> n;;
+
+// es
+let t9 = Node(8, Node(6,Null,Node(7,Null,Null)),Null);;
+insert(5,t9);; // Node(8, Node(6,Node(5,Null,Null),Node(7,Null,Null)), Null)
+insert(6,t9);;
+insert(10,t9);;
