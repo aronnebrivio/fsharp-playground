@@ -1,0 +1,78 @@
+CALCOLO IVA
+============
+
+** NOTA **
+
+Le funzioni da definire non richiedono annotazioni di tipo
+
+*****
+
+
+Il costo di un prodotto e' ottenuto aggiungendo al costo base una sovrattassa determinata dall'IVA,
+che varia in base alla categoria del prodotto.
+
+La categoria di un prodotto e' definito da una lettera dell'alfabeto, maiuscola o minuscola
+(ad esempio, 'a' e 'A' sono sinonimi).
+Assumiamo che ci siano tre scaglioni di aliquote IVA in base alla seguente tabella:
+
+
+    CATEGORIA  | ALIQUOTA IVA
+   -------------------------
+     'a'       |     4                      
+     'b'       |    10    
+   'c','d' ... |    22 
+
+
+Ad esempio, supponiamo che il costo base di un prodotto sia 1000 euro.
+Il costo con IVA, in base alla categoria del prodotto, e':
+
+ 'A' -->  1040  euro
+ 'B' -->  1100  euro
+ 'C' -->  1220  euro
+
+
+
+i) Definire la funzione
+
+    iva : char -> int
+
+che data una categoria (un char) determina la sua aliquota IVA (un int).
+
+Ad esempio:
+
+iva 'a' ;;
+// val it: int = 4
+
+iva 'B' ;;  
+// val it: int = 10
+
+iva 'x' ;;
+// val it: int = 22
+
+iva 'Z' ;;
+// val it: int = 22
+
+
+ii) Definire la funzione piuIva che calcola il costo con IVA di un prodotto.
+Piu' precisamente, la funzione ha tipo
+
+  piuIva :  char * float -> float
+   
+Data  la coppia (categoria,costoBase), che  specifica la categoria e il costo base di un prodotto,
+la fuzione calcola il costo del prodotto IVA inclusa.
+
+Verificare che, se il costo base del prodotto e' 1000 euro e la categoria e' 'A', 'B' o 'C',
+il costo con IVA e' calcolato correttamente.
+
+Nelle operazioni aritmetiche, attenzione ai tipi!
+
+iii) Definire la funzione menoIva inversa di piuIva.
+La funzione ha tipo
+  
+   menoIva :  char * float -> float
+
+
+Data  la coppia (categoria,costoConIva), che  specifica la categoria e il costo con IVA di un prodotto,
+la fuzione calcola il costo base del prodotto.
+
+Verificare che  applicando piuIva e menoIva al costo di un prodotto, si ottiene il costo di partenza. 

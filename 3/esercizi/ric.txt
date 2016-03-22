@@ -1,0 +1,80 @@
+ESERCIZI SULLA DEFINIZIONE DI FUNZIONI RICORSIVE
+================================================
+
+* Dati due interi m>=0 e n>= 0, la definizione ricorsiva del mcd fra m e n e':
+
+mcd(m,n) =  n    se m=0
+
+         =  mcd(n % m, m)   se m > 0 
+
+
+Definire una funzione ricorsiva  mcd : int * int -> int
+che calcola mcd(m,n) (si assume  m>=0 e n>= 0)
+
+Usando la funzione mcd, definire una funzione (non ricorsiva)
+
+   simplify : int * int -> int * int
+
+che semplifica una frazione.
+
+Piu' precisamente, dati due interi a >= 0 e  b>0, 
+simplify (a,b) = (c,d) se e solo se c/d e' la frazione ottenuta semplificando a/b.
+
+Esempi:
+
+simplify (15,9) ;; 
+val it : int * int = (5, 3)
+
+simplify (7,5) ;; 
+val it : int * int = (7, 5)
+
+-----------------------------------------------------------------------------------------
+
+*  Definire le seguenti funzioni ricorsive:
+
+   o  sum1 : int -> int
+
+      Dato n >=0, sum1(n) calcola la somma dei numeri compresi fra 0 e n.
+
+   o  sum2 : int * int -> int
+
+      Dati m e n tali  sum2(m,n)  calcola la somma dei numeri compresi
+      fra m e n, se n >= m >= 0, altrimenti ritorna 0.
+   
+Esempi:
+
+sum1 4 ;;          
+val it : int = 10   // 10 = 0 + 1 + 2 + 3 + 4
+
+sum2 (2,5) ;;
+val it : int = 14   // 14 = 2 + 3 + 4 + 5
+
+--------------------------------------------------------------------------------------
+
+Dare una versione ottimizzata della funzione power, che usi questa
+def:
+
+x^1 = 1
+
+x^(2n) = (x * x) ^n
+
+x^(2n + 1 ) = x * ((x * x) ^n)
+
+
+____________________________________________________________________________________________
+
+  Definire una funzione
+
+  fib : int -> int
+
+che, dato un intero n >= 0, calcola il valore  F_n dell'n-esimo numero di Fibonacci.
+
+Si ricordi che:
+
+F_0 = 0
+F_1 = 1
+F _n = F_(n-2) + F_(n-1)  per n > 2
+
+
+
+____________________________________________________________________________________________

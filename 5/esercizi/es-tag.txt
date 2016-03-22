@@ -1,0 +1,55 @@
+(* Esercizi su TAGGED UNIONS
+   ^^^^^^^^^
+
+Usando le definizioni date a lezione (tag.fsx), definire la funzione
+areaOpt che calcola l'area di una figura fig, se definita
+
+areaOpt : figura -> float option
+
+La funzione restituisce:
+
+-   None       se fig non e' ben definita (una delle dimensioni e' negativa); 
+-   Some a     se fig e' ben definita e a e' l'area di fig.
+
+
+Definire la funzione
+
+    printArea : figura -> string
+
+che  calcola l'area di una figura  e restituisce una stringa col risultato;
+se l'area non e' definita, va restituita un opportuno messaggio
+
+
+*)
+
+// val printArea : figura -> string
+
+// Esempi
+
+let as1 = printArea ( Quadrato 10. ) ;;
+// val as1 : string = "the area is: 100"
+
+let as2 = printArea ( Quadrato -10. ) ;;
+// val as2 : string = "invariant not satisfied
+
+(*
+
+Definire la funzione sommaArea che, date due figure fig1 e fig2,
+restituisce la somma delle areee delle due figure, se definita.  Il
+risultato deve essere un option type.  Per calcolare l'area, usare la
+funzione areaOpt definita sopra.
+
+Esempi: 
+*)
+
+let sum1 = sommaArea ( Rettangolo(2.,5.) , (Quadrato 10.)) ;;
+//  val sum1 : float option = Some 110..0
+
+let sum2 = sommaArea ( Rettangolo(2.,-5.),  (Quadrato 10.)) ;;
+// val sum2 : float option = None
+
+let sum3 = sommaArea ( Rettangolo(2., 5.), (Quadrato -10.)) ;;
+// val sum3 : float option = None
+
+let sum4 =  sommaArea ( Triangolo(10.,5.), Triangolo(3.5,5.)) ;;
+// val sum4  : float option = Some 33.75

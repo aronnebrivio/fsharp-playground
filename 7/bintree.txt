@@ -1,0 +1,749 @@
+    ALBERI BINARI, ALBERI BINARI DI RICERCA
+    ======================================
+
+-- Definizioni su alberi binari e alberi binari di ricerca
+-- Esercizi parte 1 (alberi binari) 
+-- Esercizi parte 2 (alberi binari di ricerca)
+In alcuni esercizi viene chiesto di usare QuickCheck.
+
+
+Albero binari
+^^^^^^^^^^^^^
+
+Un albero binario i cui nodi hanno tipo 'a puo' essere rappresentato 
+usando il tipo polimorfo ricorsivo 
+
+    'a binTree 
+
+definito come segue: 
+
+type 'a binTree =
+    | Null    // empty tree
+    | Node of 'a  * 'a binTree * 'a binTree ;;   // Node(root, left, right)
+
+
+Il tipo 'a binTree possiede due costruttori:
+
+- il costruttore 
+
+         Null : 'a binTree
+
+  (costruttore senza argomenti) che rappresenta l'albero vuoto di tipo 'a
+
+- il costruttore
+
+         Node : 'a * 'a binTree * 'a binTree -> 'a binTree
+
+
+   che data la tripla 
+
+           (x , left ,  right )          x : 'a    left,right : 'a binTree
+
+   costruisce l'albero  
+
+
+                     x         
+                   /   \
+                 left  right 
+
+
+   dove x e' la radice, left e right i sottoalberi sinistro e destro di x. 
+
+
+Esempio
+-------
+
+L'albero binario di interi
+
+
+       - 1 -
+      /     \
+     2       3
+    / \     / \ 
+   o   4   o   o        o : empty tree 
+      / \
+     o   o
+
+
+e' rappresentato dal seguente termine di tipo 'int binTree'
+                             
+ Node( 1 , Node (2, Null , Node(4,Null,Null)) ,  Node(3, Null,Null)  )
+           
+Infatti:
+
+-   Node(4,Null,Null) rappresenta il sottoalbero di radice 4  (albero che contiene solo il nodo 4)
+
+-   Node (2, Null, Node(4,Null,Null))  rappresenta il sottoalbero di radice 2
+
+-   Node(3,Null,Null)   rappresenta il sottoalbero di radice 3
+
+Definizioni
+^^^^^^^^^^^
+
+- Una *foglia (leaf)* e' un nodo senza figli.
+- La *profondita' (depth)* di un nodo e' la lunghezza del cammino dal nodo alla radice dell'albero.
+
+Nell'esempio sopra:
+
+- le foglie sono 3 e 4
+- il nodo 1 (radice) ha profondita' 0
+- i nodi 2 e 3 hanno profondita' 1
+- il nodo 4 ha profondita' 2
+
+
+Visita di un albero binario
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+La visita di un albero binario consiste nell'attraversare tutti i suoi nodi.
+
+Ci sono tre modalita' principali di attraversamento di un albero binario,
+definite ricorsivamente come segue:
+
+- visita *preorder*.
+  Ordine di visita: radice, visita preorder sottoalbero sin,  visita preorder sottoalbero dx
+   
+- visita *inorder*.
+  Ordine di visita: visita inorder sottoalbero sin, radice,  visita inorder sottoalbero dx
+ 
+- visita *postorder*.
+  Ordine di visita: visita postorder sottoalbero sin, visita postorder sottoalbero dx, radice
+
+=============================================================================================
+
+Alberi binari di ricerca
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Per definire un albero binario di ricerca, occorre fissare
+un ordinamento totale sui nodi dell'albero.
+
+Un *ordinamento* e' una relazione binaria R tale che:
+
+i)   R e' *antisimmetrica*:
+
+         se 'x R y', allora non vale 'y R x' 
+
+ii)  R e' *transitiva*:     
+  
+         se 'x R y'  e  'y R z'  allora 'x R z' 
+
+L'ordinamento R e' *totale* se, per ogni coppia di elementi x e y, vale:
+
+  'x R y'  oppure  'y R x'  oppure  'x = y'     [ *tricotomia* ]
+
+
+Esempio
+-------
+
+Un esempio di ordinamento totale sul tipo string  e' l'ordinamento lessicografico.
+
+La relazione R su stringhe definito da
+
+  s1 R s2   se e solo se   length(s1) < length(s2)
+
+e' un ordinamento ma non e' totale (es., s1 = "sole" e s2 = "luna" non verifica tricotomia).
+
+
+***
+
+Nella definizione di albero binario di ricerca si utilizza  l'ordinamento <  definito in F#.
+Questo pone delle restrizioni sul tipo concreto T che puo' essere usato  
+per istanziare la variabile  'a della definizione di binTree:
+T  *deve* essere un tipo  su cui < e' definito.
+
+Esempi di tipi su cui e' definito <:
+
+-  i tipi primitivi int, char, string (ordinamento lessicografico), bool (false<true), ....
+
+   Si puo' verificare che l'interprete accetta espressioni della forma   
+
+         2 < 0        'a' < 'z'       "ananas" < "anna"         
+        // false      // true         // true
+
+
+-  Se < e' definito su ciascuno dei tipi T1, ..., Tn, allora sul tipo
+
+          T1 * ... * Tn  
+
+   e' definito <. In questo caso < e' l'ordinamento lessicografico su tuple.
+
+   Un esempio e' il tipo  
+
+      T = int * string
+
+   Dati   (x1,s1) : (int * string)  e  (x2, s2) : (int * string) vale 
+
+     (x1,s1) < (x2,s2)   SE E SOLO SE    (x1 < x2) oppure ( x1 = x2 e s1 < s2 ) 
+
+   Quindi: 
+    
+    (10,"barbara")  <  (20,"anna")     e' true    
+    (10,"barbara")  <  (10,"anna")     e' false
+    (10,"anna")     <  (10,"annina")   e' true    
+
+L'ordinamento < non e'  definito sui tipi funzionali.
+
+Esempio:
+
+let f1 = fun x -> x + 1  ;;
+// val f1 : int -> int
+let f2 = fun x -> x + 2  ;;
+// val f2 : int -> int
+
+Le funzioni f1 e f2 hanno lo stesso tipo, ma non e' possibile confrontarle con < 
+
+f1 < f2 ;;
+
+... error ... The type '(int -> int)' does not support the 'comparison' constraint ...
+
+
+Definizione di albero binario di ricerca (rispetto a ordinamento <)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sia btree un albero binario di tipo 'T binTree' tale che sul tipo T e' definito <.
+
+L'albero btree e' un *alber di ricerca (search tree)* se, per ogni nodo x in btree,
+valgono le seguenti proprieta':
+
+1) per ogni nodo y nel sottoalbero sinistro  di x, vale y < x
+2) per ogni nodo z nel sottoalbero destro    di x, vale x < z
+
+        .
+        . 
+        x
+      /   \
+     /     \          y < x < z
+  ..y..   ..z.. 
+    
+
+Notare che:
+- la definizione deve valere *per ogni* x (non solo per la radice)
+- non sono ammessi nodi con lo stesso valore.
+
+Esempio
+-------
+
+L'albero binario 
+
+         -8-
+       /     \
+      /       \
+     6          20
+    / \        /  \ 
+   o   7      10    o        
+      / \    /  \
+     o   o  o    30
+                /  \
+               o    o
+
+
+non e' un albero di ricerca 
+(il nodo 30 si trova nel sottoalbero sinistro del nodo 20) 
+
+NOTE
+====
+
+1) Gli alberi binari di ricerca sono cosi' chiamati perche' 
+la ricerca di un elemento puo' essere effettuata in modo efficiente.
+In generale, per cercare se un elemento  e' in un albero non occorre
+visitare tutto l'albero, ma solo una parte.
+
+
+2) Se un  albero binario di ricerca e' attraversato in inorder, 
+gli elementi  sono   visitati in ordine crescente rispetto a <.
+  
+
+=========================================================================================
+
+*** ESERCIZI PARTE 1 (ALBERI BINARI)  ***
+
+
+Nei prossimi esercizi prendiamo come riferimento per i test 
+l'albero t1 di interi rappresentato sotto;
+con tk denotiamo il sottoalbero di t1 avente radice k.
+
+(*   t1 
+
+       -------------  1  --------------
+      |                               |
+      2                    ---------- 3 ---------
+     / \                   |                     |
+    o   4           ------ 5 ------              6
+       / \          |             |            /   \ 
+      o   o         7             8           9     o
+                  /  \           / \         /  \
+                 o   10        11   o       o   12
+                    /  \       /\               /\
+                   o    13    o  o             o  o  
+                        /\
+                       o  o
+ 
+*)  
+
+// definizione di t1
+
+let t2 = Node (2, Null, Node ( 4 , Null, Null ) );; 
+let t7 = Node (7, Null, Node (10, Null, Node ( 13 , Null, Null ))) ;; 
+let t8 = Node ( 8, Node ( 11, Null, Null), Null ) ;; 
+let t5 = Node ( 5, t7, t8 ) ;;
+let t9 = Node ( 9, Null,   Node (12, Null, Null) );
+let t6 = Node( 6, t9, Null) ;;
+let t3 = Node(3, t5, t6 ) ;;
+let t1 = Node (1, t2, t3 );; 
+
+____________________________________________________________________________________
+
+TRASFORMAZIONE DI ALBERI
+========================
+
+Definire la funzione ricorsiva
+
+   intToFloatTree : int binTree -> float binTree
+
+che trasforma un albero di int in un albero di float.
+Piu' precisamente, applicando la funzione a un albero di interi,
+si ottiene un albero con gli stessi valori, i cui nodi pero' hanno tipo float. 
+
+Esempio:
+
+let bt7 = intToFloatTree t7 ;;
+// val bt7 : float binTree  = Node (7.0,Null,Node (10.0,Null,Node (13.0,Null,Null)))
+
+_______________________________________________________________________________________
+
+VISITA DI UN ALBERO
+===================
+
+Definire la funzione ricorsiva
+
+  inorderToList : 'a binTree -> 'a list
+ 
+che attraversa un albero in inorder e restituisce la lista dei nodi dell'albero
+nell'ordine in cui sono stati visitati.
+
+let t1inord = inorderToList t1 ;;
+// val t1inord : int list = [2; 4; 1; 7; 10; 13; 5; 11; 8; 3; 9; 12; 6]
+
+QuickCheck
+^^^^^^^^^^
+
+Definire la funzione ricorsiva
+
+   preorderToList : 'a binTree -> 'a list
+
+analoga a inorderToList che pero' visita l'albero in preorder
+
+Utilizziamo la funzione inorderToList per verificare la seguente proprieta' prop_visit 
+di un albero btree : int binTree
+
+* Siano 
+
+     l1  = inorderToList   btree      
+     l2  = preorderToList  btree
+ 
+  Allora l1 e l2 contengono gli stessi elementi.
+***
+
+// definizione prop_visit
+let prop_visit (btree : int binTree) =
+  let l1 = inorderToList btree  |> List.sort  // visita inorder e ordina i valori 
+  let l2 = preorderToList btree |> List.sort
+  l1 = l2 ;;
+// prop_visit :  E.binTree -> bool
+
+La funzione List.sort : 'a list -> 'a list ordina una lista. 
+
+Check.Quick prop_visit ;;
+
+____________________________________________________________________________________
+
+RICERCA DI UN ELEMENTO
+======================
+
+Definire la funzione ricorsiva
+
+    search : 'a * 'a binTree -> bool     when 'a : equality
+   
+che controlla l'appartenenza di un nodo a un albero.
+
+Esempi:
+
+search(2,t1) ;; // true
+search(3,t1) ;; // true
+search(4,t1) ;; // true
+search(5,t1) ;; // true
+search(100,t1) ;; // false
+
+QuickCheck
+^^^^^^^^^^
+Verifichiamo la seguente proprieta'  prop_search sulla coppia
+( x : int , btree : int binTree):
+
+* Sia l1 = inorderToList btree.
+  Se x appartiene a l1, allora search(x,btree) restituisce true
+***
+
+
+// Controlla se x appartiene alla lista ls
+let rec mem (x , ls) =  
+    match ls with 
+    | [] -> false 
+    | y::ys -> x=y || mem (x, ys) ;;
+// mem: 'a * 'a list -> bool) when 'a : equality 
+
+let prop_search ( x , btree : int binTree) =
+  let l1 = inorderToList btree
+  mem(x,l1) ==> search(x,btree) ;;  // se x appartiene a l1, valuta  search(x,btree)
+
+Check.Quick  prop_search ;;
+
+____________________________________________________________________________________
+
+RICERCA CON PREDICATO FILTRO
+============================
+
+i) Definire la funzione ricorsiva
+
+   filterToList : ('a -> bool) * 'a binTree -> 'a list
+
+che, data una coppia formata da un predicato pred e un albero binario btree,
+cioe' una coppia  della forma
+
+   ( pred : 'a -> bool , btree :  'a binTree )
+
+
+visita l'albero btree in inorder e costruisce la lista degli elementi visitati 
+che soddisfano il predicato pred.
+In altri termini, pred funge da filtro che scarta gli elementi x per cui 'pred x' non vale.
+
+
+ii) Definire i predicati:
+
+isEven   :  int -> bool       //  isEven  n  = true   sse  n e' un numero pari  
+isSmall  :  int -> bool       //  isSmall n  = true   sse  n  < 5
+
+Verficare che:
+
+let t1even = filterToList (isEven,t1 ) ;;
+// val t1even : int list = [2; 4; 10; 8; 12; 6]
+
+let t1small = filterToList (isSmall,t1 ) ;;
+// val t1small : int list =   [2; 4; 1; 3]
+
+______________________________________________________________________________________
+
+CONTEGGIO DI NODI E FOGLIE
+==========================
+
+i) Definire la funzione ricorsiva
+
+  count : 'a binTree -> int * int
+
+che dato un albero binario btree calcola la coppia (nodes, leaves) dove:
+- nodes   e' il numero totale dei nodi dell'albero;
+- leaves  e' il numero totale delle foglie dell'albero.
+
+Esempi:
+
+let n1 = count t2 ;;  // (2, 1)
+let n2 = count t7 ;;  // (3, 1)
+let n3 = count t6 ;;  // (3, 1)
+let n4 = count t1 ;;  // (13, 4)
+
+____________________________________________________________________
+
+PROFONDITA' DI UN NODO
+=======================
+
+Definire la funzione ricorsiva
+
+ depthToList : int * 'a binTree -> 'a list
+
+che data la coppia 
+
+  ( n : int  , btree : 'a binTree )   con n>=0, 
+
+restituisce la lista dei nodi di btree aventi profondita' n.
+
+Esempi:
+
+let d0 = depthToList (0, t1) ;; // [1]  
+let d1 = depthToList (1, t1) ;; // [2; 3]
+let d2 = depthToList (2, t1) ;; // [4; 5; 6]
+let d3 = depthToList (3, t1) ;; // [7; 8; 9]
+let d4 = depthToList (4, t1) ;; // [10; 11; 12]
+let d5 = depthToList (5, t1) ;; // [13]
+let d7 = depthToList (100, t1) ;; // []   
+
+___________________________________________________________________
+
+PERCORSO IN UN ALBERO
+=====================
+
+
+Per accedere a un elemento di un albero,  partiamo dalla radice
+e indichiamo il percorso da compiere.
+Un percorso e' una lista di direzioni da seguire, destra (R) o sinistra (L).
+Se la lista e' vuota, il percorso termina immediatamente nella radice,
+altrimenti si seguono le indicazioni del percorso, scendendo a ogni passo
+nel figlio sinistro o destro a seconda della direzione.
+E' possibile che il percorso non possa essere completato
+(ad esempio, se in un nodo senza figlio sinistro la prossima direzione e' L).
+
+Per denotare una direzione introduciamo il tipo
+
+type direction = L | R ;; // Left, Right
+
+Definire la funzione ricorsiva
+
+ getElement : direction list * 'a binTree -> 'a option
+
+che data la coppia
+
+  ( path : direction list , btree : 'a binTree )
+
+effettua il percorso path nell'albero btree e restituisce:
+
+- Some k   se il percorso termina sul nodo k
+-  None    se non e' possibile completare il percorso.
+
+Esempi:
+
+let g1 = getElement ( [], t1 ) ;;  //  Some 1
+let g2 = getElement ( [L], t1 ) ;; //  Some 2
+let g3 = getElement ( [L ; L], t1 ) ;; // None
+let g4 = getElement ( [L ; R], t1 ) ;; // Some 4
+let g5 = getElement ( [L ; R ; R], t1 ) ;; // None 
+let g6 = getElement ( [R ; L ; L], t1 ) ;; // Some 7
+let g7 = getElement ( [R ; L ; L ; L ; L], t1 ) ;; // None
+let g8 = getElement ( [R ; L ; L ; R ; R], t1 ) ;; // Some 13 
+
+=================================================================================
+
+*** ESERCIZI PARTE 2 (ALBERI BINARI DI RICERCA)  ***
+
+
+INSERIMENTO DI UN ELEMENTO
+==========================
+
+L'inserimento in un albero di ricerca avviene inserendo il nuovo elemento
+al posto di un sottoalbero vuoto. 
+Il nuovo elemento diventa quindi una foglia dell'albero.
+
+Ad esempio, supponiamo di voler inserire il nodo 6 nell'albero di ricerca
+
+       - 10-
+      /     \
+     5       20
+    / \      / \ 
+   o   7    o   o     
+      / \
+     o   o
+     *
+
+Il nodo va inserito a sinistra di 7, al posto della foglia marcata con *.
+L'albero ottenuto e':
+
+       - 10-
+      /     \
+     5       20
+    / \     /  \ 
+   o   7   o    o     
+      / \
+     6   o
+    / \
+   o   o
+
+
+Analogamente, inserendo i nodi 4, 15 e 9 si ha che:
+  4 diventa il figlio sinistro di 5
+ 15 diventa il figlio sinistro di 20
+  9 diventa il figlio destro di 7   
+
+
+i) Definire la funzione ricorsiva
+
+   insert :  'a  * 'a binTree -> 'a binTree    when 'a : comparison
+                                               
+
+che data la coppia   
+
+ ( x : 'a  , btree : 'a binTree ) 
+
+dove btree e' un albero binario di ricerca,
+restituisce l'albero binario di ricerca ottenuto inserendo x in btree;
+se x e' gia' nell'albero, va restituito l'albero di partenza
+(non sono ammessi nodi duplicati).
+
+Verificare la correttezza con opportuni test.
+
+ii) Definire la funzione ricorsiva 
+
+   insertFromList : 'a list * 'a binTree -> 'a binTree    when 'a : comparison
+
+che, data la coppia  
+
+   ( ls: 'a list , btree : 'a binTree ) 
+
+dove btree e' un albero binario di ricerca, restituisce l'albero binario di ricerca 
+ottenuto inserendo gli elementi della lista ls nell'albero btree.
+Gli elementi vanno inseriti nell'ordine in cui compaiono nella lista.
+(notare che, cambiando l'ordine con cui gli elementi sono inseriti, 
+l'albero di ricerca ottenuto puo' risultare diverso).
+
+
+iii) Definire le seguenti liste:
+
+let intList = [ 20 ; 10 ; 60 ; 15 ; 40 ; 100 ; 30 ; 50 ; 70 ; 35 ; 42 ; 58 ; 75 ; 32 ; 37 ] ;;
+let strList1 = [ "pesca" ; "banana" ; "uva" ; "albicocca" ; "nocciola" ; "ribes" ] ;;
+let strList2 = [ "limone" ; "ciliegia" ; "mela" ; "pera" ; "noce"  ] ;;
+ 
+Costruire i seguenti alberi di ricerca:
+
+- intTree : albero ottenuto partendo dall'albero vuoto e  inserendo gli elementi di intList 
+            (albero di tipo 'int binTree')
+
+
+      ------------- 20 --------------
+      |                             |
+     10                  --------- 60 ----------
+    /  \                 |                      |
+   o   15           ----- 40 ------            100
+      /  \          |             |            /  \ 
+     o    o        30            50           70   o
+                  /  \           / \         /  \
+                 o   35        42   58      o   75
+                    /  \       /\   /\          /\
+                   32   37    o  o o  o        o  o 
+                   /\   /\
+                  o  o o  o
+ 
+
+- strTree1:  albero ottenuto partendo dall'albero vuoto e inserendo gli elementi di strList1 
+             (albero di tipo 'string binTree')
+
+
+
+                  -------------------- pesca --------------------
+                  |                                             |
+        ------ banana --------                                 uva
+       |                      |                               /   \   
+   albicocca               nocciola                       ribes    o
+     /  \                   /    \                         / \
+    o    o                 o      o                       o   o
+        
+
+- strTree2: albero ottenuto inserendo in strTree1 gli elementi di strList2 
+            (albero di tipo 'string binTree')
+
+
+
+                  -------------------- pesca --------------------
+                  |                                             |
+        ------ banana --------                                 uva
+       |                      |                               /   \   
+   albicocca           -----nocciola-----                  ribes   o
+     / \               |                 |                 / \
+    o   o           limone             pera               o   o
+                  /       \           /    \
+            ciliegia      mela      noce    o   
+              / \         / \       / \  
+             o   o       o   o     o   o 
+
+
+
+_______________________________________________________________________________________________
+
+RICERCA DI UN ELEMENTO
+======================
+
+
+Definire la funzione ricorsiva
+
+ search1 : 'a * 'a binTree -> bool   when 'a : comparison
+
+definita come search (vedi esercizio sopra), 
+ma in cui si assume che l'albero sia un albero binario di ricerca 
+(quindi, la ricerca puo' essere effettuata in maniera efficiente).
+
+Verificarne la correttezza facendo dei test sugli alberi gia' definiti.
+
+___________________________________________________________________________________________
+
+RICERCA DI UN ELEMENTO CON CALCOLO PERCORSO SEGUITO
+===================================================
+
+
+[Difficile]  Definire la funzione ricorsiva
+  
+  searchPath : 'a * 'a binTree -> 'a list when 'a : comparison
+
+che  data la coppia  
+
+    ( x: 'a , btree : 'a binTree ) 
+
+con btree albero binario di ricerca,
+restituisce la lista dei nodi corrispondenti al percorso seguito per raggiungere
+il nodo x partendo dalla radice dell'albero. 
+Se x non e' nell'albero, va restituita la lista vuota.
+
+Evitare di attraversare l'albero piu' di una volta.
+
+Esempi:
+
+let p1 = searchPath (10, intTree) ;; // [20; 10]
+let p2 = searchPath (20, intTree) ;; // [20]
+let p3 = searchPath (40, intTree) ;; // [20; 60; 40]
+let p4 = searchPath (32, intTree) ;; // [20; 60; 40; 30; 35; 32]
+let p5 = searchPath (11, intTree) ;; // []
+
+___________________________________________________________________________
+
+RICERCA MINIMO ELEMENTO
+=======================
+
+Definire la funzione ricorsiva
+
+   min : 'a binTree -> 'a option
+
+che, dato un albero binario di ricerca btree, restituisce il minimo elemento dell'albero;
+piu' precisamente,  se btree e' vuoto, la funzione  restituisce None;
+altrimenti la funzione restituisce 'Some m', dove m e' il minimo elemento di btree.
+
+Notare che in un albero di ricerca il minimo elemento si trova scendendo verso sinistra 
+fin che si puo'.
+
+Esempi:
+
+min intTree ;;   //   Some 10
+min strTree2;;   //  Some "albicocca"
+min ( Null : int binTree) ;; // None
+
+______________________________________________________________________________________
+
+ESTRAZIONE SOTTOALBERO
+======================
+
+Definire la funzione ricorsiva
+
+  subtree : 'a * 'a binTree -> 'a binTree when 'a : comparison
+
+che, data la coppia  
+
+   ( x: 'a , btree : 'a binTree ) 
+
+con btree albero binario di ricerca,
+restituisce il sottoalbero di btree con radice x. 
+Se x non compare in tree, va restituito l'abero vuoto.
+
+Esempi:
+
+let m1 = min ( subtree(10, intTree) )  ;;    // Some 10
+let m2 = min ( subtree(15, intTree) )  ;;    // Some 15
+let m3 = min ( subtree(60, intTree) )  ;;    // Some 30
+let m4 = min ( subtree(40, intTree) ) ;;     // Some 30
+let m5 = min ( subtree(100, intTree) ) ;;    // Some 70
+let m6 = min ( subtree(1000, intTree) ) ;;   // None
+let m7 = min ( ( subtree ("limone",  strTree2) ) ) ;;  //  Some "ciliegia"
+let m8 = min ( ( subtree ("ribes",  strTree2) ) )  ;;  // Some "ribes"
+
+ 
