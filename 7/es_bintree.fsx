@@ -396,3 +396,40 @@ let rec min btree =
 min intTree ;;   //   Some 10
 min strTree2;;   //  Some "albicocca" =====> PROBLEMA CON IL TIPO (sprintf "%i" richiede un int)
 min ( Null : int binTree) ;; // None
+
+(*
+    ESTRAZIONE SOTTOALBERO
+    ======================
+
+    Definire la funzione ricorsiva
+
+      subtree : 'a * 'a binTree -> 'a binTree when 'a : comparison
+
+    che, data la coppia  
+
+       ( x: 'a , btree : 'a binTree ) 
+
+    con btree albero binario di ricerca,
+    restituisce il sottoalbero di btree con radice x. 
+    Se x non compare in tree, va restituito l'abero vuoto.
+*)
+let rec subtree (x,btree) =
+    match btree with
+    | Null -> Null
+    | Node(v,Null,Null) -> 
+        if x=v then Node(v,Null,Null)
+        else Null
+    | Node(v,l,r) ->
+        if x<v then subtree(x,l)
+        elif x>v then subtree(x,r) 
+        else Node(v,l,r);;
+
+let m1 = min ( subtree(10, intTree) )  ;;    // Some 10
+let m2 = min ( subtree(15, intTree) )  ;;    // Some 15
+let m3 = min ( subtree(60, intTree) )  ;;    // Some 30
+let m4 = min ( subtree(40, intTree) ) ;;     // Some 30
+let m5 = min ( subtree(100, intTree) ) ;;    // Some 70
+let m6 = min ( subtree(1000, intTree) ) ;;   // None
+// ------
+let m7 = min ( ( subtree ("limone",  strTree2) ) ) ;;  //  Some "ciliegia"
+let m8 = min ( ( subtree ("ribes",  strTree2) ) )  ;;  // Some "ribes"
