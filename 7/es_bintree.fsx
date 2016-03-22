@@ -291,3 +291,28 @@ let t9 = Node(8, Node(6,Null,Node(7,Null,Null)),Null);;
 insert(5,t9);; // Node(8, Node(6,Node(5,Null,Null),Node(7,Null,Null)), Null)
 insert(6,t9);;
 insert(10,t9);;
+
+(*
+    ii) Definire la funzione ricorsiva 
+
+       insertFromList : 'a list * 'a binTree -> 'a binTree    when 'a : comparison
+
+    che, data la coppia  
+
+       ( ls: 'a list , btree : 'a binTree ) 
+
+    dove btree e' un albero binario di ricerca, restituisce l'albero binario di ricerca 
+    ottenuto inserendo gli elementi della lista ls nell'albero btree.
+    Gli elementi vanno inseriti nell'ordine in cui compaiono nella lista.
+    (notare che, cambiando l'ordine con cui gli elementi sono inseriti, 
+    l'albero di ricerca ottenuto puo' risultare diverso).
+*)
+let rec insertFromList (list, btree) =
+    match list with
+    | [] -> btree
+    | [x] -> insert(x,btree)
+    | x::xs -> insertFromList(xs, insert(x,btree)) ;;
+
+// es
+insertFromList([5;6;10],t9);; 
+// -> Node (8,Node (6,Node (5,Null,Null),Node (7,Null,Null)),Node (10,Null,Null))
