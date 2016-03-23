@@ -237,7 +237,7 @@ let rec getElement (path, btree) =
     | Null -> "None"
     | Node(x,l,r) ->
         match path with
-        | [] -> "Some " + sprintf "%i" x
+        | [] -> "Some " + x.ToString()
         | x::xs ->
             if x=L then getElement(xs,l)
             else getElement(xs,r) ;;
@@ -389,7 +389,7 @@ search("mango", strTree1);; //false
 let rec min btree =
     match btree with
     | Null -> "None"
-    | Node(x,Null,_) -> "Some " + sprintf "%i" x
+    | Node(x,Null,_) -> "Some " + x.ToString()
     | Node(x,l,_) -> min l ;;
 
 // test
