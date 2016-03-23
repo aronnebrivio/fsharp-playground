@@ -433,3 +433,40 @@ let m6 = min ( subtree(1000, intTree) ) ;;   // None
 // ------
 let m7 = min ( ( subtree ("limone",  strTree2) ) ) ;;  //  Some "ciliegia"
 let m8 = min ( ( subtree ("ribes",  strTree2) ) )  ;;  // Some "ribes"
+
+
+(*
+    RICERCA DI UN ELEMENTO CON CALCOLO PERCORSO SEGUITO
+    ===================================================
+
+    [Difficile]  Definire la funzione ricorsiva
+      
+      searchPath : 'a * 'a binTree -> 'a list when 'a : comparison
+
+    che  data la coppia  
+
+        ( x: 'a , btree : 'a binTree ) 
+
+    con btree albero binario di ricerca,
+    restituisce la lista dei nodi corrispondenti al percorso seguito per raggiungere
+    il nodo x partendo dalla radice dell'albero. 
+    Se x non e' nell'albero, va restituita la lista vuota.
+
+    Evitare di attraversare l'albero piu' di una volta.
+*)
+let rec searchPath (x,btree) =
+    match btree with
+    | Null -> []
+    | Node(v,_,_) when v=x -> [v]
+    | Node(v,l,r) when search1(x,btree) ->
+        let path = [v]
+        if x<v then path @ searchPath(x,l)
+        else path @ searchPath(x,r)
+    | Node(v,l,r) -> [] ;;
+
+// es
+let p1 = searchPath (10, intTree) ;; // [20; 10]
+let p2 = searchPath (20, intTree) ;; // [20]
+let p3 = searchPath (40, intTree) ;; // [20; 60; 40]
+let p4 = searchPath (32, intTree) ;; // [20; 60; 40; 30; 35; 32]
+let p5 = searchPath (11, intTree) ;; // []
