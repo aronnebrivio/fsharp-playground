@@ -1,3 +1,6 @@
+#r @"FsCheck";;
+open FsCheck;;
+
 // 0)
 type valV = { studente : string ; voto : int };;
 type valG = { studente : string ; giudizio : string };;
@@ -29,3 +32,7 @@ let rec valutaList vlist =
 
     // test
     let vlist = [v1; v2; v3; v4];;
+
+let ``valutaList è una map di valuta`` (xs : valV list)  =
+  List.map valuta xs = valutaList xs;;
+do Check.Quick  ``valutaList è una map di valuta``
