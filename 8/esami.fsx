@@ -63,14 +63,13 @@ let rec creaValList (slist : string list, vlist : int list) =
     creaValList(sl2,vl4);;
 
 // 4)
-let rec sommaAndConta vlist =
-    match vlist with
-    | [] -> (0,0)
-    | [x] -> (x.voto,1)
-    | x::xs -> 
-        let (s,n) = sommaAndConta xs
-        (s+x.voto,n+1);;
-
 let media vlist =
+    let rec sommaAndConta vlist =
+        match vlist with
+        | [] -> (0,0)
+        | [x] -> (x.voto,1)
+        | x::xs -> 
+            let (s,n) = sommaAndConta xs
+            (s+x.voto,n+1)   
     let (s,n) = sommaAndConta vlist
     (float s)/(float n) ;;
