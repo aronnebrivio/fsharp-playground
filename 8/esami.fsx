@@ -122,7 +122,7 @@ let rec number (cat, cd) =
         let n = number (cat, xs)
         match x with
         | (_,c) when c=cat -> 1+n
-        | (_,_) -> n
+        | (_,_) -> n ;;
 
     // test
     let ch1 = {name="Rossi"; category=Daycare};;
@@ -139,3 +139,13 @@ let rec number (cat, cd) =
     let cd6 = ("Lupoli", Daycare);;
     let cdl = [cd1; cd2; cd3; cd4; cd5; cd6];;
     number(Recreation, cdl);;
+
+// ii')
+let number_prop (cdl) =
+    let l1 = number(Daycare, cdl)
+    let l2 = number(Nursery, cdl)
+    let l3 = number(Recreation, cdl)
+    cdl.Length = (l1+l2+l3)
+
+do Check.Quick number_prop 
+
