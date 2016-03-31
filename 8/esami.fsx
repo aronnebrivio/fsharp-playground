@@ -92,3 +92,9 @@ let rec separa vlist =
 
     // test
     separa(creaValList(sl2,vl2));;
+
+let ``due liste risultato hanno stessi elementi di vs`` (vs : valV list) =
+    let (v1, v2) = separa vs
+    List.sort vs = List.sort (v1 @ v2)
+
+do Check.Quick ``due liste risultato hanno stessi elementi di vs`` 
