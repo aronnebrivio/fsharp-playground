@@ -19,3 +19,13 @@ let valuta vall =
     valuta(v2);;
     valuta(v3);;
     valuta(v4);;
+
+// 2)
+let rec valutaList vlist =
+    match vlist with
+    | [] -> []
+    | [x] -> [valuta(x)]
+    | x::xs -> valuta(x) :: valutaList(xs) ;;
+
+    // test
+    let vlist = [v1; v2; v3; v4];;
