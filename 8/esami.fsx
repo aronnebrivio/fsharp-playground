@@ -98,3 +98,10 @@ let ``due liste risultato hanno stessi elementi di vs`` (vs : valV list) =
     List.sort vs = List.sort (v1 @ v2)
 
 do Check.Quick ``due liste risultato hanno stessi elementi di vs`` 
+
+
+// PARTE B) DAYCARE
+type category =
+    | Daycare
+    | Nursery
+    | Recreation
