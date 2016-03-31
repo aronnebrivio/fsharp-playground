@@ -104,4 +104,10 @@ do Check.Quick ``due liste risultato hanno stessi elementi di vs``
 type category =
     | Daycare
     | Nursery
-    | Recreation
+    | Recreation ;;
+
+// i)
+type names = string;;
+type childDes = category;;
+
+
