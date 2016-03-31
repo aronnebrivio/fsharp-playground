@@ -73,3 +73,22 @@ let media vlist =
             (s+x.voto,n+1)   
     let (s,n) = sommaAndConta vlist
     (float s)/(float n) ;;
+
+    // test
+    media(creaValList(sl2,vl2));;
+
+// 5)
+let rec separa vlist =
+    match vlist with
+    | [] -> ([],[])
+    | [x] when x.voto >= 18 -> ([],[x])
+    | [x] -> ([x],[])
+    | x::xs when x.voto >= 18 ->
+        let (i,s) = separa xs
+        (i,x::s)
+    | x::xs ->
+        let (i,s) = separa xs
+        (x::i,s) ;;
+
+    // test
+    separa(creaValList(sl2,vl2));;
