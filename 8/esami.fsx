@@ -36,3 +36,28 @@ let rec valutaList vlist =
 let ``valutaList è una map di valuta`` (xs : valV list)  =
   List.map valuta xs = valutaList xs;;
 do Check.Quick  ``valutaList è una map di valuta``
+
+// 3)
+let rec creaValList (slist : string list, vlist : int list) =
+    match slist with
+    | [] -> []
+    | [x] -> match vlist with
+             | [] -> []
+             | y::ys -> [{studente=x; voto=y}]
+    | x::xs -> match vlist with
+               | [] -> []
+               | y::ys -> {studente=x; voto=y} :: creaValList(xs,ys) ;;
+
+    // test
+    let sl1 = [];;
+    let sl2 = ["Rossi"; "Bianchi"; "Brivio"];;
+    let vl1 = [];;
+    let vl2 = [11; 20; 30];;
+    let vl3 = [11; 20];;
+    let vl4 = [11; 20; 30; 28];;
+    creaValList(sl1,vl1);;
+    creaValList(sl1,vl2);;
+    creaValList(sl2,vl1);;
+    creaValList(sl2,vl2);;
+    creaValList(sl2,vl3);;
+    creaValList(sl2,vl4);;
