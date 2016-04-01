@@ -1,0 +1,198 @@
+Il seguente test si compone di due esercizi, che verrano corretti a
+alto livello, ma non valutati.
+
+La sessione di consegna rimarra' aperta fino a lunedi' 4 aprile.  E'
+possibile caricare piu' copie dello stesso file e anche scaricare il
+materiale consegnato.  Verra' guardata solamente l'ultima versione dei
+file consegnati.
+
+I file contenente il codice vanno caricati alla pagina
+
+    https://upload.di.unimi.it/
+
+I file da caricare sono:
+
+esami.fsx  (esercizio 1)
+dc.fsx     (esercizio 2)
+
+Va inoltre caricato un file
+
+info.txt
+
+contenente le seguenti righe (da copiare e completare):
+
+NOME:
+
+COGNOME: 
+
+MATRICOLA:
+
+CORSO DI LAUREA:
+
+ANNO DI CORSO:
+
+Quali linguaggi di programmazione conosci?
+
+Hai seguito altri corsi con elementi di programmazione funzionale? Se
+si', indicare quale.
+
+===========================================================================
+
+Parte (A) ESAMI
+
+ESAMI
+====
+
+Una valutazione numerica e' una record con campi studente e voto
+e una valutazione a giudizio è una record  con campi studenti e
+giudizio, dove:
+
+- studente e giudizio sono stringhe;
+- voto un intero.
+
+0) Dare delle type definitions dei record
+
+type valV = ...
+type valG = ...
+
+1) Definire una funzione
+
+   valuta :  valV  ->   valG
+
+che, dato il nome di uno studente e il voto, restituisce il record con
+campi studente e giudizio, dove il giudizio e' definita secondo la seguente tabella:
+ 
+ meno di 18   --->        insufficiente   
+ da 18 a 22   --->        sufficiente  
+ da 23 a 27   --->        buono 
+ piu' di 27   --->        ottimo
+
+
+Esempio: se "Bianchi" ha voto 16, il record restituito contiene il
+campo "insufficiente"
+
+-------------------------------------------------------------------
+
+2)  Definire la funzione
+
+ valutaList : valV list -> valG list
+
+che trasforma una lista di valutazioni numeriche
+in una lista di valutazioni a giudizio
+
+In questo caso si richiede di *NON* usare le funzioni nella
+collection List. 
+
+Si usi nel testing questa property:
+
+let ``valutaList è una map di valuta`` (xs : valV list)  =
+  List.map valuta xs = valutaList xs;;
+do Check.Quick  ``valutaList è una map di valuta``
+
+
+
+
+--------------------------------------------------------------------------
+
+3)  Definire  la funzione
+
+    creaValList : (string list * int list) -> valV list
+
+che, data una lista di studenti e una lista di voti, crea la lista dei record
+delle valutazioni (studente,voto).  Se le liste non hanno la stessa
+lunghezza, la parte in eccedenza non viene considerata.
+
+
+
+4) Definire la funzione
+
+   media : valV list -> float
+
+che data una lista di  record di valutazioni  calcola la media dei voti.
+
+La funzione può usare la definizione (possibilmente locale, cioè  al
+suo interno) di una  funzione 
+
+  sommaAndConta : valV list  -> int * int
+
+che, data una lista vList di record di valutazione studente e voto, calcola
+**simultaneamente** (cioe' in una unica passata) la coppia
+
+  (sommaVoti,count)
+
+dove sommaVoti e' la somma dei voti in vList e count il numero di
+valutazioni, cioe' la lunghezza in vList.
+
+
+
+
+5) Definire la funzione 
+
+ separa : valV list -> valV list * valV list
+
+che, data una lista di valutazioni numeriche , crea due liste di
+valutazioni numeriche, la lista dei bocciati (voto < 18) e la lista dei promossi
+(voto>= 18).
+
+- Definire una proprietà FsCheck che controlla che i record in
+  questione sono preservati da "separa". Hint: usare List.sort
+
+let ``due liste risultato hanno stessi elementi di vs`` () =
+...
+
+do Check.Quick ``due liste risultato hanno stessi elementi di vs`` 
+
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END
+
+
+
+======================================================================================================
+
+PARTE B) DAYCARE
+
+A day-care looks after children in 3 ways: as Daycare, as a Nursery,
+as as Recreation. This yields the following type
+
+type category =
+    | Daycare
+    | Nursery
+    | Recreation
+
+A child is described by its surname and category
+
+i. Declare suitable types "names" and "childDes" to model the above.
+   (Hint: a type abbreviation is enough for names, a tagged type is
+   suitable for the other)
+
+ii. declare a function 
+
+    number : category * (childDes list) -> int
+
+    which counts the number of children that belong to a certain
+    category
+
+ii' Write a property that (partally) validate the number function and
+    then quickcheck it. For example you could relate the output to the
+    lenght of childDes list
+
+Parents are charged monthly $225 for Daycare, $116 for Nursery and
+$110 for Recreation. However large families have a discount: if a
+family has more than one child attending the day-care, the first child
+pays full charge, the other siblings half.
+
+iii. Write a function 
+
+     pay  : name * childDes list -> float
+
+     that computes how much a family named "name" pays given a list of childDes 
+
+- you can assume that childDes list is sorted according to categories,
+  so it lists first Daycare attendees, then Nursery etc 
+
+- you may want to define a function, say remove, which determines if a
+   child of a given surname is in the list: If so, this is the child that pays full
+  price, while his siblings in the rest of the list will pay half.
+
+iv. Write some tests and run your program.
+

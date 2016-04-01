@@ -1,0 +1,15 @@
+NOME: Aronne
+
+COGNOME: Brivio
+
+MATRICOLA: 831154
+
+CORSO DI LAUREA: Informatica (F1X)
+
+ANNO DI CORSO: Terzo
+
+Quali linguaggi di programmazione conosci? Java, C, JavaScript, PHP, SQL, Bash
+
+Hai seguito altri corsi con elementi di programmazione funzionale? Se
+si', indicare quale.
+No
