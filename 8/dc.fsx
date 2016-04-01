@@ -52,17 +52,34 @@ let number_prop (cdl) =
 do Check.Quick number_prop 
 
 // iii)
-let rec remove (nms, cd : childDes list) =
+let rec remove (nms, cd) =
     match cd with
     | [] -> []
     | [x] ->
         match x with
-        | (_,c) when c=nms -> []
+        | (c,_) when c=nms -> []
         | (_,_) -> [x]
     | x::xs ->
-        let n = number (nms, xs)
         match x with
-        | (_,c) when c=nms -> xs
-        | (_,_) -> x::xs ;;
+        | (c,_) when c=nms -> remove (nms,xs)
+        | (_,_) -> x:: remove (nms,xs) ;;
 
-//let pay (nms, cd) = 
+let rec pay (nms, cd) = 
+    let cd = List.sort cd
+    match cd with
+    | [] -> 0.
+    | [x] -> 
+        match x with
+        | (c,d) when c=nms -> 
+            if d=Daycare then 255.
+            else if d=Nursery then 116.
+            else 110.
+        | (_,_) -> 0.
+    | x::xs ->
+        match x with
+        | (c,d) when c=nms ->
+            let tot = pay (nms,xs)
+            if d=Daycare then tot + 255.
+            else if d=Nursery then tot + 116.
+            else tot + 110.
+        | (_,_) -> pay (nms,xs) ;;
