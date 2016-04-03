@@ -52,7 +52,7 @@ let number_prop (cdl) =
 do Check.Quick number_prop 
 
 // iii)
-let rec remove (nms, cd) =
+let rec removeOld (nms, cd) =
     match cd with
     | [] -> []
     | [x] ->
@@ -64,7 +64,7 @@ let rec remove (nms, cd) =
         | (c,_) when c=nms -> remove (nms,xs)
         | (_,_) -> x:: remove (nms,xs) ;;
 
-let rec pay (nms, cd) = 
+let rec payOld (nms, cd) = 
     let cd = List.sort cd
     match cd with
     | [] -> 0.
@@ -83,3 +83,25 @@ let rec pay (nms, cd) =
             else if d=Nursery then tot + 116.
             else tot + 110.
         | (_,_) -> pay (nms,xs) ;;
+
+let pay nms cd =
+    // payP chooses how much you have to pay
+    let payP category = 
+        if (category = Daycare) then 225.0 
+        elif (category = Nursery) then 116.0 
+        else 110.0
+    // remove removes the first child of a family
+    let rec remove name childList =
+        match childList with
+        |[] -> ([],0.0)
+        |x::xs -> let (list,ca)=remove name xs
+                  if x.name=name then (xs,payP x.category) else (x::list,ca) 
+    // pagamento 
+    let rec pagamento name lista =
+        match lista with
+        |[] -> 0.0
+        |x::xs -> let tot=pagamento name xs
+                  if x.name=name then tot+payP x.category/2.0 else tot
+    // lets the game start 
+    let (lista,cat)=remove nms cd
+    pagamento nms lista+cat;;
