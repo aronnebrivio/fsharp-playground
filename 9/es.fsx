@@ -120,3 +120,17 @@ let rec filter pred ls =
              else []
     | x::xs -> if pred(x) then x :: filter pred xs
                 else filter pred xs;;
+
+(*
+    3.2) Usando fiter, definire la funzione
+
+       mult3 : int  -> int list
+
+    che costruisce la lista dei multipli di 3 compresi fra 1 e n
+    (applicare in modo opportuno filter sulla lista [1 .. n]).
+*)
+
+let mult3 x =
+    let ls = [1 .. x]
+    let p x = x%3 = 0
+    filter p ls;;
