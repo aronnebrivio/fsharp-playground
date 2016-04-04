@@ -177,10 +177,23 @@ ESERCIZIO 4 (VARIANTE DI FILTER)
 
        ('a -> bool) -> 'a list -> 'a list * 'a list
 *)
-let filter1 pred ls =
+let rec filter1 pred ls =
     match ls with
     | [] -> ([],[])
     | [x] -> if pred(x) then ([x],[])
              else ([],[x])
-    | x::xs -> if pred(x) then (x :: filter pred xs, filter pred xs)
-                else (filter pred xs , x :: filter pred xs);;
+    | x::xs -> 
+        let (l, r) = filter1 pred xs
+        if pred(x) then (x :: l, r)
+                else (l, x :: r);;
+
+
+(*
+    4.2) Usando filter1 e le definizioni nell'esercizio precedente, costruire le coppie di liste
+
+    p1 =  ( [3; 6; 9; 12; 15; 18] , [1; 2; 4; 5; 7; 8; 10; 11; 13; 14; 16; 17; 19; 20] )
+     //  ( multipli di 3 , non-multipli di 3 ) 
+*)
+    // test
+    let p x = x%3 = 0;;
+    let p1 = filter1 p [1 .. 20];;
