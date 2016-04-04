@@ -250,3 +250,45 @@ let prop_filter1_app pred (ls : int list) =
     let (xs,ys) = filter1 pred ls
     List.sort ls = List.sort (xs @ ys);;
 do Check.Quick prop_filter1_app;;
+
+(*
+ESERCIZIO 5 (NUMERI PRIMI)  
+=========================
+
+    Definire la funzione 
+
+         divisori : int -> int list
+
+    che, dato un intero n > 0, restituisce la lista dei suoi divisori
+    (usare opportunamente la funzione filter).
+
+    Esempio:
+
+     let d100 =  divisori 100 ;;
+    // val d100 : int list = [1; 2; 4; 5; 10; 20; 25; 50; 100]
+
+    Usando la funzione divisori, definire la funzione isPrime che determina se un intero  e' primo.
+    Notare che e' sufficiente scrivere una espressione booleana.
+*)
+let divisori x =
+    match x with
+    | 0 -> []
+    | _ when x<0 -> []
+    | _ ->
+        let ls = [1 .. x]
+        let p b = x%b = 0
+        filter p ls;;
+
+    // test
+    let d100 =  divisori 100 ;; // val d100 : int list = [1; 2; 4; 5; 10; 20; 25; 50; 100]
+
+let isPrime x = List.length (divisori x) = 2;;
+
+    // test
+    isPrime 1000;;
+    isPrime 777;;
+    isPrime 2;;
+    isPrime 6;;
+    isPrime 123;;
+    isPrime 73;;
+    isPrime 41;;
