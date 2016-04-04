@@ -44,3 +44,20 @@ let pardis x =
     //test
     let l2 = map pow ls;;
     let l3 = map pardis ls;;
+
+(*
+    2.3) Consideriamo la lista
+
+    let names = [ ("Mario", "Rossi") ; ("Anna Maria", "Verdi") ; ("Giuseppe", "Di Gennaro")] ;;
+
+    Applicando map a una opportuna funzione e alla lista names, costruire la lista
+     
+    names1 =  ["Dott. Mario Rossi"; "Dott. Anna Maria Verdi"; "Dott. Giuseppe Di Gennaro"]
+*)
+let names = [ ("Mario", "Rossi") ; ("Anna Maria", "Verdi") ; ("Giuseppe", "Di Gennaro")] ;;
+
+let dottname (n,s) = "Dott. " + n + " " + s;;
+
+    //test
+    map dottname names;;
+
