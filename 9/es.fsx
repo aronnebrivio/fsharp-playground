@@ -197,3 +197,26 @@ let rec filter1 pred ls =
     // test
     let p x = x%3 = 0;;
     let p1 = filter1 p [1 .. 20];;
+
+(*
+    4.3) Usando filter1, definire la funzione
+      
+       multNonmult : int -> int list * int list
+
+    che, dato un intero n, partiziona la lista [1 .. n] 
+    nella coppia di liste  
+
+        ( multipli di 3 , non-multipli di 3 ) 
+
+    Ad esempio:
+
+       multNonmult 16 =   ( [3; 6; 9; 12; 15] , [1; 2; 4; 5; 7; 8; 10; 11; 13; 14; 16] )
+*)
+
+let multNonmult x =
+    let ls = [1 .. x]
+    let p x = x%3 = 0
+    filter1 p ls;;
+
+    //test
+    multNonmult 16;; //( [3; 6; 9; 12; 15] , [1; 2; 4; 5; 7; 8; 10; 11; 13; 14; 16] )
