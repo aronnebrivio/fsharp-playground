@@ -32,6 +32,7 @@ let rec number (cat, cd) =
     let ch4 = {name="Pignatale"; category=Recreation};;
     let ch5 = {name="Fortunato"; category=Daycare};;
     let ch6 = {name="Lupoli"; category=Daycare};;
+    let ch7 = {name="Brivio"; category=Daycare};;
     let cd1 = ("Rossi", Daycare);;
     let cd2 = ("Bianchi", Nursery);;
     let cd3 = ("Brivio", Recreation);;
@@ -39,7 +40,7 @@ let rec number (cat, cd) =
     let cd5 = ("Fortunato", Daycare);;
     let cd6 = ("Lupoli", Daycare);;
     let cd7 = ("Brivio", Daycare);;
-    let cdl = [cd1; cd2; cd3; cd4; cd5; cd6; cd7];;
+    let cdl = [ch1; ch2; ch3; ch4; ch5; ch6; ch7];;
     number(Recreation, cdl);;
 
 // ii')
@@ -61,8 +62,8 @@ let rec removeOld (nms, cd) =
         | (_,_) -> [x]
     | x::xs ->
         match x with
-        | (c,_) when c=nms -> remove (nms,xs)
-        | (_,_) -> x:: remove (nms,xs) ;;
+        | (c,_) when c=nms -> removeOld (nms,xs)
+        | (_,_) -> x:: removeOld (nms,xs) ;;
 
 let rec payOld (nms, cd) = 
     let cd = List.sort cd
@@ -78,11 +79,11 @@ let rec payOld (nms, cd) =
     | x::xs ->
         match x with
         | (c,d) when c=nms ->
-            let tot = pay (nms,xs)
+            let tot = payOld (nms,xs)
             if d=Daycare then tot + 255.
             else if d=Nursery then tot + 116.
             else tot + 110.
-        | (_,_) -> pay (nms,xs) ;;
+        | (_,_) -> payOld (nms,xs) ;;
 
 let pay nms cd =
     // payP chooses how much you have to pay
