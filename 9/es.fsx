@@ -1,3 +1,6 @@
+#r "FsCheck" ;;
+open FsCheck ;;
+
 (*
     ESERCIZIO 2
 
@@ -61,3 +64,29 @@ let dottname (n,s) = "Dott. " + n + " " + s;;
     //test
     map dottname names;;
 
+(*
+    2.3B) Definire e  verificare con QuickCheck le seguenti  proprieta' di map:
+
+
+    i)    prop_map f (ls : int list)
+
+    map e List.map calcolano gli stessi valori
+    (piu' precisamente, le applicazioni 'map f ls' e 'List.map f ls' producono la stessa lista).
+
+    ii)   prop_map_pres_len f (ls :int list)
+
+    La lista  'map f ls' ha la stessa lunghezza di ls
+    (per calcolare la lunghezza di una lista si puo' usare List.length)
+*)
+
+// i)
+let prop_map f (ls: int list) =
+    List.map f ls = map f ls;;
+do Check.Quick prop_map;;
+
+// ii)
+let prop_map_pres_len f (ls : int list) =
+    let l1 = map f ls
+    let l2 = List.map f ls
+    List.length l1 = List.length l2;;
+do Check.Quick prop_map_pres_len;;
