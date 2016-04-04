@@ -134,3 +134,28 @@ let mult3 x =
     let ls = [1 .. x]
     let p x = x%3 = 0
     filter p ls;;
+
+(*
+    3.2B
+    QuickCheck
+    ^^^^^^^^^^
+    Definire e  verificare con QuickCheck le seguenti  proprieta' di filter:
+
+    i) prop_filter pred (ls : int list) 
+
+    filter e List.filter calcolano gli stessi valori.
+
+    ii)  prop_filter_len pred (ls :int list)
+
+    La lista   'filter pred ls' non puo' essere piu' lunga della lista ls.
+*)
+// i)
+let prop_filter pred (ls: int list) =
+    filter pred ls = List.filter pred ls;;
+do Check.Quick prop_filter;;
+
+// ii)
+let prop_filter_len pred (ls: int list) =
+    let l1 = filter pred ls
+    List.length l1 <= List.length ls;;
+do Check.Quick prop_filter_len;;
