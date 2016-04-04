@@ -5,7 +5,7 @@ This repo contains, divided between *numerated* folders, a personal college F# p
 There is a folder for **each** lesson.   
 Each folder contains
 - 2do work (`*.txt`)
-- code (`*.fsi`)
+- code (`*.fsx`)
 - [slides (`*.pdf`)]
     
 ## Dependencies
