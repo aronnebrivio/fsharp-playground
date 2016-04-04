@@ -159,3 +159,28 @@ let prop_filter_len pred (ls: int list) =
     let l1 = filter pred ls
     List.length l1 <= List.length ls;;
 do Check.Quick prop_filter_len;;
+
+(*
+ESERCIZIO 4 (VARIANTE DI FILTER)    
+================================
+
+    4.1) Definire la funzione ricorsiva filter1 analoga a filter in cui pero'
+
+       filter1 pred ls = ( lsTrue, lsFalse )
+
+    dove:
+
+    - lsTrue    contiene gli elementi di ls che verificano pred
+    - lsFalse   contiene gli elementi di ls che non verificano pred
+
+    Il tipo di filter1 e':
+
+       ('a -> bool) -> 'a list -> 'a list * 'a list
+*)
+let filter1 pred ls =
+    match ls with
+    | [] -> ([],[])
+    | [x] -> if pred(x) then ([x],[])
+             else ([],[x])
+    | x::xs -> if pred(x) then (x :: filter pred xs, filter pred xs)
+                else (filter pred xs , x :: filter pred xs);;
