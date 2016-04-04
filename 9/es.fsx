@@ -220,3 +220,27 @@ let multNonmult x =
 
     //test
     multNonmult 16;; //( [3; 6; 9; 12; 15] , [1; 2; 4; 5; 7; 8; 10; 11; 13; 14; 16] )
+
+(*
+    4.3B)
+
+    QuickCheck
+    ^^^^^^^^^^
+
+    Definire e  verificare con QuickCheck le seguenti  proprieta' di filter1:
+
+    i) prop_filter1_len pred (ls : int list)
+
+    Sia  (xs,ys) il risultato di 'filter1 pred ls'.
+    Allora concatenando xs e ys si ottiene una lista avente la stessa lunghezza di ls.
+
+    ii) t prop_filter1_app pred (ls :int list)
+
+    Sia  (xs,ys) il risultato di 'filter1 pred ls'.
+    Allora, concatenando xs e ys si ottiene una lista avente gli stessi elementi di ls.
+*)
+// i)
+let prop_filter1_len pred (ls : int list) =
+    let (xs,ys) = filter1 pred ls
+    List.length ls = List.length (xs @ ys);;
+do Check.Quick prop_filter1_len;;
