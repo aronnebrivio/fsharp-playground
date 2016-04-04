@@ -90,3 +90,33 @@ let prop_map_pres_len f (ls : int list) =
     let l2 = List.map f ls
     List.length l1 = List.length l2;;
 do Check.Quick prop_map_pres_len;;
+
+(*
+ESERCIZIO 3  (FILTER)   
+=====================
+
+    3.1) Definire la funzione ricorsiva filter tale che, 
+     data una funzione pred (predicato)  e una lista ls  aventi tipo
+
+      pred : 'a -> bool     ls :  'a list
+
+    il  valore di
+
+       filter pred ls
+       
+    e' la lista di tipo 'a list contenente gli elementi di ls che verificano pred.
+    La lista risultante contiene quindi gli elementi x di ls tali che pred x e' true  (pred funge da filtro).
+
+    Il tipo di filter e':
+
+     filter: ('a -> bool) -> 'a list -> 'a list
+
+    ed e'  una funzione higher-order
+*)
+let rec filter pred ls =
+    match ls with
+    | [] -> []
+    | [x] -> if pred(x) then [x]
+             else []
+    | x::xs -> if pred(x) then x :: filter pred xs
+                else filter pred xs;;
