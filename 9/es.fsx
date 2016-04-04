@@ -244,3 +244,9 @@ let prop_filter1_len pred (ls : int list) =
     let (xs,ys) = filter1 pred ls
     List.length ls = List.length (xs @ ys);;
 do Check.Quick prop_filter1_len;;
+
+// ii)
+let prop_filter1_app pred (ls : int list) =
+    let (xs,ys) = filter1 pred ls
+    List.sort ls = List.sort (xs @ ys);;
+do Check.Quick prop_filter1_app;;
