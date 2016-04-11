@@ -61,3 +61,7 @@ let rec reduceBack2 f xs =
         else f y (reduceBack2 f ys);;
 
 let last xs = reduceBack2 (fun ys y -> y) xs;;
+
+// 2.2 verificare con FsCheck equivalenza tra vostra reduceBack e quella di libreria
+let reduce_prop f (xs : 'a list) = (xs.Length > 0) ==> lazy (reduceBack2 f xs = List.reduceBack f xs);;
+do Check.Quick reduce_prop;;
