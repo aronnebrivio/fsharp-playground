@@ -1,0 +1,186 @@
+ESERCIZIO 1
+===========
+
+Scopo dell'esercizio e' implementare il prodotto scalare fra due
+vettori, dove un vettore  e' rappresentato da una lista.
+
+Dati due vettori a e b della stessa dimensione n (n >= 0)
+       
+      a  =   [a1 ; a2 ; ... ; an]  
+      b  =   [b1 ; b2 ; ... ; bn]  
+      
+il prodotto scalare a . b e' definito come segue:
+
+  a . b  =  a1 * b1 + a2 * b2 +  ... + an * bn
+ 
+Ad esempio:
+  
+ a =  [1;  3; -5 ] 
+ b =  [4; -2; -1 ] 
+
+ a * b =  1*4 + 3*(-2) + (-5)*(-1) = 3 
+
+Si assume che i vettori abbiano la stessa lunghezza.
+Definire la funzione 
+
+   dotProduct : int list ->  int list -> int
+
+che calcola il prodotto scalare di due vettori:
+
+1.1 Con una ricorsione esplicita
+
+1.2 Con funzioni di ordine superiore (nella loro variante "2" che si
+applica a due liste allo stesso tempo).
+
+In ambo i caso si richiede che l'implementazione non scorra le liste
+più di una volta.
+
+1.3 Si validi l'equivalenza delle due definizioni con una proprietà
+FsCheck, tenendo presente che si assume che i due vettori hanno la
+stessa lunghezza.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ESERCIZIO 2
+============
+
+2.1 Definire una funzione
+
+   takeWhile :  ('a -> bool) -> 'a list -> 'a list
+
+che, applicata a un predicato p : ('a -> bool) e a una lista ls : 'a
+list, genera il **prefisso piu' lungo** di tutti gli elementi di ls che
+soddifano p.
+
+In altri termini, se ls contiene gli elementi x0, x1, x2, ...  va
+restituita la piu' lunga sottolista di ls che inizia da x0 e i cui
+elementi soddisfano il predicato p (notare che il prefisso puo' essere
+la lista vuota).
+
+Esempi:
+
+let p1 = takeWhile (fun x -> x < 10) [ 1 .. 100]
+// p1 = [1; 2; 3; 4; 5; 6; 7; 8; 9]
+
+let p2 = takeWhile (fun x -> x < 0) [ 1 .. 100]
+// p2 = []
+    
+let p3 =  takeWhile (fun x -> x % 2 = 0) [2;4;5;6];;
+// p3 = [2; 4]
+
+let p4 = takeWhile (fun x -> x % 2 = 1) [2;4;5;6];;
+// p4 = []
+
+2.2 Definire la funzione duale
+
+dropWhile : ('a -> bool) -> 'a list -> 'a list
+
+che elimina elementi fino a che il predicato è vero e ritorna il
+residuo quando è falso.
+
+Esempi:
+
+let d1 = dropWhile (fun x -> x < 10) [ 1 .. 20]
+// let d2 =  [10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20]
+
+let d2 = dropWhile (fun x -> x > 50) [ 1 .. 10]
+// d2 = [1..10]
+
+let d3 =  dropWhile (fun x -> x % 2 = 0) [2;4;5;6];;
+//val d3 : int list = [5; 6]
+
+let d4 = dropWhile (fun x -> x % 2 = 1) [2;4;5;6];;
+// d4 = [2; 4; 5; 6]
+
+2.3 Scrivere una proprietà FsCheck che esibisca un legame tra una
+lista e il risultato di fare una take e una drop della stessa lista e
+predicato.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ESERCIZIO 3
+============
+3.1. Definire una funzione di divisione
+
+ safeDiv : int option -> int option -> int option
+
+che prende due espressioni di tipo int option e restituisce il
+risultato solo se ambo gli arogmenti sono Some n e il divisore e'
+diverso da zero
+
+Esempi:
+
+let d1 = safeDiv (Some (2 + 1) (Some 4);;
+// d1 = Some 0
+
+let d2 = safeDiv (Some 3) (Some 0);;
+// d2 = None
+
+let d3 = safeDiv (Some 3) None;;
+// d3 = None
+
+3.2. Definire una funzione 
+
+optMapBinary   : ('a -> 'b -> 'c) -> 'a option -> 'b option -> 'c option
+
+che accetta una funzione binaria e due argomenti opzione e  
+applica la funzione agli argomenti se entrambi sono definiti, 
+altrimenti restituisce None.
+
+Esempi:
+
+let x1 =  optMapBinary (fun a  b ->  2*(a + b) ) (Some 2) (Some 3)
+// x1 = Some 10
+
+let x2 =  optMapBinary (fun a  b ->  2*(a + b) )  None (Some -2)
+// x2 = None
+
+
+3.3. Usare questa funzione per definire le  versioni "option" di addizione e
+moltiplicazione
+
+   optPlus :  int option -> int option -> int option   
+   optTimes : int option -> int option -> int option   
+
+Esempi:
+
+let y1 = optPlus (Some 3) (Some 1);;
+// y1 = Some 4
+
+let y2 = optPlus (Some 3) None
+// y2  = None
+
+let y4 =  optTimes  (safeDiv (Some 1) (Some 0)) (Some 1)
+// y4 = None
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ESERCIZIO 4
+====================
+
+Si consideri un linguaggio per la logica proposizionale
+
+f ::= b | - f | f1 /\ f2 | f1 \/ f2
+
+dove b è una constante booleana; poi abbiamo negazione, congiunzione e
+disgiunzione.
+
+4.1 Si dia una dichiarazione di type appropriata per i tagged value di
+tipo "form"
+
+4.2 Si definisca una funzione eval : form -> bool che data una
+formula ritorna il suo valore booleano.
+
+Es: eval  <la rappresentazine della formula informale
+    (true /\ - (3 = 4)) >
+    	       	    	ritorna true
+
+4.3 Si definisca una funzione toString : form -> string che data  
+f : form, la renda come una stringa seguendo la grammatica informale
+(infissa, parentesizzata etc)
+
+4.4 si scriva una funzione main : form -> string che componga le due
+sopra, ovvero valuti f ma la  presenti come stringa:
+
+       " il risultato di valuatare <f>  è <res> "
