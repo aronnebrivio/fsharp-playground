@@ -1,0 +1,34 @@
+// 1. Definire mediante foldBack le seguenti funzioni  e controllare equivalenza con FsCheck
+
+// 1.1 List.concat
+
+// 1.2 List.filter
+
+(* 2.
+
+Vi sono dei casi in cui l'operazione che intendiamo implementare opera
+su una list **NON* vuota
+
+es: List.min : ('a list -> 'a) when 'a : comparison
+
+In questo caso si può usare la funzione List.reduceBack, che è simile a
+foldBack, ma lavora solo su liste non vuote e su un tipo solo T:
+
+ List.reduceBack : ('T -> 'T -> 'T) -> 'T list -> 'T
+
+"Applies a function to each element of the collection, threading an
+accumulator argument through the computation.  If the input function
+is f and the elements are i0...iN, then this function computes
+     	     f i0 (...(f iN-1 iN))."
+
+   *)
+
+let minlist xs = List.reduceBack min xs
+
+// 2.1 Definire per ricorsione esplicita la funzione reduceBack
+// e usarla per implemenare la funzione last : 'a list -> 'a
+// che ritorna l'ultimo elemento di una lista non vuota
+
+// 2.2 verificare con FsCheck equivalenza tra vostra reduceBack e quella di libreria
+
+// 2.3 Infine definire reduceBack via foldBack
