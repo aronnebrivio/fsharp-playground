@@ -67,3 +67,16 @@ let reduce_prop f (xs : 'a list) = (xs.Length > 0) ==> lazy (reduceBack2 f xs = 
 do Check.Quick reduce_prop;;
 
 // 2.3 Infine definire reduceBack via foldBack
+let rec pop_last ls =
+  match ls with
+  | [] -> failwith "Lista vuota"
+  | [x] -> ([],x)
+  | x::xs -> let (p, q) = pop_last xs 
+             (x::p, q);;
+
+let reduceBack3 fn ls =
+  let (p,q) = pop_last ls
+  List.foldBack fn p q;;
+
+reduceBack3 min [1..10];;
+reduceBack3 max [1..10];;
