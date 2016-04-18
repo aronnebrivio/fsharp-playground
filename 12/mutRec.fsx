@@ -196,7 +196,22 @@ Usare uno schema di mutua ricorsione della forma
 
 
 *)   
+// --- esercizio ---
+let rec namesFileSys fileSys =
+    match fileSys with
+    | [] -> []
+    | x::xs -> (namesElement x) @ (namesFileSys xs)
+and namesElement el =
+    match el with
+    | File n -> [n]
+    | Dir (d,fs) -> d :: (namesFileSys fs);;
 
+
+
+
+
+// --- soluzione ---
+(*
 let rec namesFileSys fileSys =
   match fileSys with
     | []    -> []
@@ -205,7 +220,7 @@ and namesElement el =
   match el with
     | File s    -> [s]
     | Dir(s,fileSys) -> s :: (namesFileSys fileSys);;
-
+*)
 
 let names1 = namesElement d1;;
 // val names : string list = ["d1"; "a1"; "d2"; "a2"; "d3"; "a3"; "a4"; "d3"; "a5"]
