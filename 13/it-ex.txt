@@ -1,0 +1,49 @@
+1. Give an iterative defintion of List.length
+	- via an accumulator
+	- via fold
+        - via continuations
+
+	Quickcheck their equivalence
+
+
+2. Give an iterative defintion of List.Map
+	- via an accumulator
+        - via continuations
+
+	Quickcheck their equivalence and informally evaluate their performances
+	in terms of time and space
+
+
+3. Give definitions  with accumulators and continuations of the pre/in/post-order tree traversal
+functions.
+
+	Quickcheck their equivalence.
+
+
+4. Declare a standard recursive and an accumulator-based function 
+
+sum: int*int -> int, where for m ≥ 0 and n ≥ 0.
+
+sum(m, n) = m + (m + 1) + (m + 2) + · · · + (m + (n − 1)) + (m + n)
+
+    Quickcheck their equivalence
+
+
+5. Declare an iterative version of Fibonacci.
+
+Hint: if F_n is the n-th Fibonacci number, the equation you're
+looking for is
+
+	ifib n F_k F_(k + 1) = F_(k + n)
+
+ Quickcheck the equivalence with the standard one "fib"
+ on small ints, using this code
+
+
+let prop_fib n =
+  let smallGen n =
+    Arb.filter (fun x -> x < n) Arb.from<int>
+  Prop.forAll (smallGen  n )
+       (fun m ->  m > 0 ==> lazy (fib m = itfib m))
+
+example: prop_fib 10
