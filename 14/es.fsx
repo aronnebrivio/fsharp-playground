@@ -92,3 +92,55 @@ let rec filter f sq = seq {
 };;
 // test
 filter (fun x -> x%3=0) nat |> Seq.take 20 |> Seq.toList;;
+
+(*
+SEQUENZA DI FIBONACCI
+=====================
+
+Lo scopo dell'esercizio e' definire la sequenza infinita
+
+   fibSeq : seq<int> 
+
+dei numeri di Fibonacci.
+
+i) Definire la funzione ricorsiva
+
+   fibFrom :  int -> int -> seq<int>
+
+che, dati due interi a e b, genera la sequenza di Fibonacci i cui primi due numeri sono a e b,
+ossia la sequenza di interi  x0, x1, x2, ... tale che
+
+    x0  =  a
+    x1  =  b
+    xn  =  x(n-2) + x(n-1) per ogni  n >= 2
+
+Ad esempio, la lista dei primi 10 elementi di
+
+  fibFrom 5 10
+
+e'  
+
+ [5; 10; 15; 25; 40; 65; 105; 170; 275; 445]
+
+Suggerimento
+^^^^^^^^^^^^
+
+Notare che
+  
+   fibFrom a b 
+
+e' la sequenza 
+
+  a ; b ; a + b  ; b + (a+b) ;  (a+b) + (b+(a+b)) ; .... 
+
+Osservare come e' fatta la sottosequenza che parte da b:
+
+  b ; a + b  ; b + (a+b) ;  (a+b) + (b+(a+b)) ; .... 
+*)
+let rec fibFrom a b =
+    seq {
+        yield a
+        yield! fibFrom b (a+b)
+    };;
+// test
+fibFrom 5 10 |> Seq.take 10 |> Seq.toList;;
