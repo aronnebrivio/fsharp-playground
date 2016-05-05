@@ -44,3 +44,26 @@ let nat = Seq.initInfinite (fun x -> x);;
 let squares = map (fun x -> x*x) nat;;
 // test
 squares |> Seq.take 15 |> Seq.toList;;
+
+(*
+iii)  Modificare la definizione di map in modo che funzioni correttamente 
+anche su sequenze finite.
+
+Rispetto a prima, occorre anche considerare il caso in cui la sequenza sq e' vuota
+(infatti, dopo un certo numero di chiamate ricorsive su una sequenza finita, si genera la sequenza vuota).
+Notare che sulle sequenze non e' possibile fare pattern matching.
+Puo' essere utile usare la funzioni
+
+   Seq.isEmpty : seq<'a> -> bool  // verifica se una  sequenza e' vuota
+   Seq.empty   :  seq<'a>         // costante che definisce la sequenza vuota
+*)
+let rec map2 f sq = seq {
+    yield! if Seq.isEmpty sq then Seq.empty
+           else seq {
+               yield f (Seq.item 0 sq)
+               yield! map f (Seq.skip 1 sq)
+           }
+};;
+// test
+map2 (fun x->x*2) Seq.empty;;
+map2 (fun x->x*2) (seq {1..10});;
