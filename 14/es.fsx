@@ -167,3 +167,53 @@ fib 2 ;;   // 2
 fib 3 ;;   // 3
 fib 4 ;;   // 5
 fib 10 ;;  // 89
+
+(*
+SEQUENZA DELLE SOMME DI UNA SEQUENZA
+====================================
+
+i) Definire la funzione
+   
+   sumSeq : seq<int> -> seq<int>
+
+che, data una sequenza infinita di interi,
+
+  n0, n1, n2, n3, .....
+
+costruisce la sequenza delle somme 
+
+ n0, n0 + n1, n0 + n1 + n2, n0 + n1 + n2 + n3, ....
+
+Suggerimento
+^^^^^^^^^^^^
+
+Consideriamo la sottosequenza che parte da n0 + n1
+   
+  n0 + n1, n0 + n1 + n2, n0 + n1 + n2 + n3, ...
+  
+Tale sequenza puo' essere ottenuta come sumSeq della sequenza infinita
+
+  n0 + n1, n2,  n3, ...
+
+
+ii) Verificare che la lista dei primi 15 elementi della sequenza
+
+    sumSeq nat 
+
+e'
+
+ [0; 1; 3; 6; 10; 15; 21; 28; 36; 45; 55; 66; 78; 91; 105]
+
+*)
+let rec sumSeq sq =
+    seq {
+        yield Seq.item 0 sq
+        let first = ((Seq.item 0 sq)+(Seq.item 1 sq))
+        let sq = seq {
+            yield first
+            yield! Seq.skip 2 sq
+        }
+        yield! sumSeq sq
+    };;
+// test
+sumSeq nat |> Seq.take 15 |> Seq.toList;;
