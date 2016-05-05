@@ -31,3 +31,16 @@ let rec map f sq = seq {
 // test
 let sq = seq {1..10};;
 map (fun x -> x*2) sq;;
+
+(*
+ii)  Applicare map alla sequenza infinita nat dei naturali 
+per generare la sequenza infinita squares  dei quadrati dei naturali.
+  
+Verificare che la lista dei primi 15 elementi di squares e':
+
+[0; 1; 4; 9; 16; 25; 36; 49; 64; 81; 100; 121; 144; 169; 196; 225; 256; 289; 324; 361]
+*)
+let nat = Seq.initInfinite (fun x -> x);;
+let squares = map (fun x -> x*x) nat;;
+// test
+squares |> Seq.take 15 |> Seq.toList;;
