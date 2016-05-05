@@ -81,3 +81,50 @@ Verificare che la lista dei primi 10 numeri primi e'
 *)
 let nat2 = Seq.skip 2 (Seq.initInfinite (fun x -> x));;
 sieve nat2;;
+
+(*
+iv) L'implementazione fornita del Crivello di Eratostene e' poco efficiente,
+in quanto le sequenze usate vengono continuamente rigenerate da capo.
+
+Per migliorare l'efficienza si puo' usare il meccanismo di caching 
+che memorizza gli elementi della sequenza che sono gia' stati costruiti.
+In questo modo si evita di calcolare piu' volte lo stesso elemento di una sequenza.
+
+Procedere come segue:
+
+a)  Definire la versione cached della funzione sift:
+
+let siftC a sq = Seq.cache  ( sift a sq )   
+// siftC esegue sift e usa  cache per memorizzare la sequenza ottenuta
+
+b) Definire la funzione sieveC, analoga a sieve, in cui pero' si usa  siftC al posto di sift 
+   e sieveC nelle chiamate ricorsive.
+
+
+c) Definire la sequenza cached dei numeri primi usando sieveC:
+
+let primesC = Seq.cache (sieveC nat2)
+
+Si puo' verificare sperimentalmente che l'implementazione con caching e' piu' efficiente
+(provare a generare una lista di numeri primi grande usando le due versioni).
+
+Notare inoltre che eseguendo piu' volte la ricerca di un numero primo, ad esempio
+
+Seq.nth 1000 E.primesC ;;
+//val it : int = 7927
+Seq.nth 1000 E.primesC ;;
+//val it : int = 7927
+
+la seconda richiesta ha una risposta immediata (il risultato e' stato memorizzato dopo la prima computazione).
+*)
+let siftC a sq = Seq.cache (sift a sq);;
+let rec sieveC sq =
+    seq {
+        let first = Seq.item 0 sq
+        if first=0 || first=1 then
+            yield! sieveC (Seq.skip 1 sq)
+        else
+            yield first
+            yield! sieveC (siftC first sq)
+    };;
+let primesC = Seq.cache (sieveC nat2);;
