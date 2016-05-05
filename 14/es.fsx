@@ -67,3 +67,28 @@ let rec map2 f sq = seq {
 // test
 map2 (fun x->x*2) Seq.empty;;
 map2 (fun x->x*2) (seq {1..10});;
+
+(*
+FILTER
+======
+
+i) Definire la funzione ricorsiva
+
+ filter : ('a -> bool) -> seq<'a> -> seq<'a>
+
+che, dato un predicato pred : 'a -> bool e una sequenza *infinita* sq,
+genera la sequenza degli elementi di sq che verificano sq.
+
+ii) Applicare filter alla sequenza infinita nat dei naturali
+per generare la sequenza dei multipli di 3 (0, 3, 6, ...)
+
+Verificare che la lista dei primi 20 elementi della sequenza generata e'
+
+ [0; 3; 6; 9; 12; 15; 18; 21; 24; 27; 30; 33; 36; 39; 42; 45; 48; 51; 54; 57]
+*)
+let rec filter f sq = seq {
+    if f (Seq.item 0 sq) then yield Seq.item 0 sq
+    yield! filter f (Seq.skip 1 sq)
+};;
+// test
+filter (fun x -> x%3=0) nat |> Seq.take 20 |> Seq.toList;;
