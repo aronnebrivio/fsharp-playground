@@ -70,3 +70,14 @@ let rec sieve sq =
     };;
 //test
 sieve nat;;
+
+(*
+iii) Sia nat2 la sequenza infinita degli interi n >= 2.
+La sequenza infinita primes dei numeri primi puo' essere costruita applicando sieve a nat2.
+
+Verificare che la lista dei primi 10 numeri primi e'
+ 
+ [2; 3; 5; 7; 11; 13; 17; 19; 23; 29]
+*)
+let nat2 = Seq.skip 2 (Seq.initInfinite (fun x -> x));;
+sieve nat2;;
