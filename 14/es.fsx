@@ -144,3 +144,26 @@ let rec fibFrom a b =
     };;
 // test
 fibFrom 5 10 |> Seq.take 10 |> Seq.toList;;
+
+(*
+ii) Definire la funzione
+
+  fib : int -> int
+
+che, dato n >= 0, calcola il numero di Fibonacci di indice n.
+
+Poiche' i numeri di Fibonacci crescono esponenzialmente,
+conviene rappresentarli usando il tipo uint64 invece di int;
+le costanti di tipo  uint64 hanno suffisso UL 
+(ad esempio, la costante 5 di tipo uint64 e' 5UL).
+*)
+let fib i =
+    let fibseq = fibFrom 1 1
+    Seq.item i fibseq;;
+// test
+fib 0 ;;   // 1
+fib 1 ;;   // 1
+fib 2 ;;   // 2
+fib 3 ;;   // 3
+fib 4 ;;   // 5
+fib 10 ;;  // 89
