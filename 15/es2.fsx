@@ -179,3 +179,6 @@ let rec allFiles path =
         yield! Directory.GetFiles path
         yield! Seq.collect Directory.GetFiles (Directory.GetDirectories path)
     };;
+// test
+let down = allFiles "/home/aronne/Scaricati";;
+let downc = Seq.length down;;
