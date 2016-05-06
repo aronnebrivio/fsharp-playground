@@ -128,3 +128,54 @@ let rec sieveC sq =
             yield! sieveC (siftC first sq)
     };;
 let primesC = Seq.cache (sieveC nat2);;
+
+(*
+ELENCO DEI FILE IN UNA DIRECTORY
+=================================
+
+Definite la funzione
+
+  allFiles : string -> seq<string>
+
+che dato il path di una directory (una stringa) costruisce la sequenza
+dei file contenuti nella directory specificata e, ricorsivamente, 
+in tutte le sue sottodirectory.
+
+Usare le seguenti funzioni di F#:
+
+* Directory.GetFiles  : string -> string [] 
+ 
+  Restituisce un array di string contenente i nomi dei file nella directory specificata.
+  
+* Directory.GetDirectories : string -> string [] 
+ 
+  Restituisce un array di string contenente i nomi delle directory nella directory specificata.
+ 
+Per usare queste funzioni occorre aprire System.IO:
+
+  open System.IO ;;
+
+Notare che gli array possono essere visti come sequenze,
+quindi e' possible applicare agli array le funzioni definite sulle sequenze.
+
+Occorre inoltre usare la funzione Seq.collect.
+
+
+Esempio:
+
+let myDir = "/home/bob/tmp"  // definizione di un path 
+let fileSeq = allFiles myDir
+
+Seq.nth 10 fileSeq ;;  // file in posizione 10 in fileSeq
+// val it : string = "/home/bob/tmp/prova/xx.txt"
+
+
+Calcolare il numero dei file nella sequenza ottenuta.
+*)
+open System.IO;;
+
+let rec allFiles path =
+    seq {
+        yield! Directory.GetFiles path
+        yield! Seq.collect Directory.GetFiles (Directory.GetDirectories path)
+    };;
