@@ -182,3 +182,17 @@ let rec allFiles path =
 // test
 let down = allFiles "/home/aronne/Scaricati";;
 let downc = Seq.length down;;
+
+(*
+VALUTAZIONE  LAZY DEL PRODOTTO
+==============================
+
+Definire una funzione prod che calcola il prodotto di due interi in modo lazy.
+Quindi, se il primo argomento e' zero, la funzione restituisce zero, senza valutare
+il secondo argomento.
+
+Seguire lo stesso procedimento usato nella funzione lazyAnd
+*)
+let prod a b = 
+    let lzy = lazy(a*b)
+    lzy.Force ();;
