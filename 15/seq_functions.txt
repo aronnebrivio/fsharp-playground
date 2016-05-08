@@ -1,0 +1,174 @@
+FUNZIONI SU SEQUENZE (SEQ LIBRARY)
+==================================
+
+
+**********************************************************
+*   Come spiegato nella NOTA in fondo al file,           *
+*   un argomento di tipo seq<'a>  puo' essere anche      *
+*   istanziato con un termine di tipo list<'a> oppure    *
+*   con un termine che rappresenta un array di 'a        *                             
+**********************************************************
+
+
+
+*  Seq.empty :  seq<'a>
+
+   Costante che definisce la sequenza vuota.
+
+
+*  Seq.isEmpty : seq<'a> -> bool
+
+   Verifica se una sequenza e' vuota
+
+
+*  Seq.initInfinite : (int -> 'a) -> seq<'a>
+
+   Data una funzione  f : int -> 'a
+
+       Seq.initInfinite f  
+  
+   definisce la sequenza infinita  di tipo seq<'a> i cui elementi sono
+
+        f(0) ; f(1) ; f(2) ; ....
+
+
+*  Seq.nth : int -> seq<'a> -> 'a
+ 
+   Dati n>=0 e una sequenza sq = seq [ e0 ; e1 ; e2 ... ] di tipo seq<'a>, 
+   restituisce l'elemento di sq di indice n 
+
+      Seq.nth n sq  =  e(n)  
+
+   Se la sequenza ha meno di n elementi, viene sollevata una eccezione.
+
+
+*  Seq.take : int -> seq<'a> -> seq<'a>
+
+   Dati n>=0 e una sequenza sq = seq [ e0 ; e1 ; e2 ... ] di tipo seq<'a>, 
+   estrae la sottosequenza formata dai primi n elementi di sq
+    
+      Seq.take n sq = seq [ e0 ; e1 ; ... ; e(n-1) ]  
+
+   Se la sequenza ha meno di n elementi, si ha errore.
+
+
+*  Seq.skip : int -> seq<'a> -> seq<'a>
+
+   Dati n>=0 e una sequenza sq = seq [ e0 ; e1 ; e2 ... ] di tipo seq<'a>,
+   estrae la sottosequenza ottenuta da sq saltando i primi n elementi  
+       
+     Seq.skip n sq = seq [en ; e(n+1) ; ... ]  // salta e0, e1, ... , e(n-1)
+   
+   Se la sequenza ha meno di n elementi, si ha errore.
+
+
+*  Seq.append : seq<'a> -> seq<'a> -> seq<'a>
+
+   Concatena due sequenza dello stesso tipo.
+   Se sq1 e' una sequenza infinita, allora la sequenza
+
+        sq = Seq.append sq1 sq2
+
+   e' uguale a sq1. Infatti, per ogni n >= 0, vale:
+
+        Seq.nth n sq  =  Seq.nth n sq1  // l'elemento di posto n in sq e sq1 e' lo stesso
+
+
+*  Seq.toList : seq<'a> -> 'a list
+
+   Trasforma una sequenza in una lista.
+   Se applicata a una sequenza infinita, la computazione non termina.
+
+*  Seq.map : ('a -> 'b) -> seq<'a> -> seq<'b>
+
+   Date una funzione f : 'a -> 'b e una sequenza sq = seq [ e0 ; e1 ; e2 ... ] di tipo seq<'a>, 
+   
+      Seq.map f sq
+  
+   e' la sequenza 
+ 
+       seq [ f(e0) ; f(e1) ; f(e2) ; ... ]  
+
+   di tipo  seq<'b>
+
+
+*  Seq.filter : ('a -> bool) -> seq<'a> -> seq<'a>
+ 
+   Dati un predicato  pred  : 'a -> bool  e una sequenza sq di tipo seq<'a>,
+
+       Seq.filter pred sq
+
+   costruisce le sequenza degli elementi di sq che verificano pred.
+
+
+*  Seq.collect : ('a -> seq<'b>) -> seq<'a> -> seq<'b>
+
+   Date una funzione f :'a -> seq<'b> e  una sequenza sq = seq [ e0 ; e1 ; e2 ... ] di tipo seq<'a>,
+
+       Seq.collect f sq
+
+   costruisce la sequenza di tipo seq<'b> ottenuta concatenando le sequenze f(e0), f(e1), f(e2), ... 
+
+
+*  Seq.exists :  ('a -> bool) -> seq<'a> -> bool 
+ 
+   Dati un predicato pred : 'a -> bool e una sequenza sq di tipo seq<'a>, restituisce:
+
+    o  true se sq contiene almeno un elemento che verifica pred;
+    o  false altrimenti. 
+          
+   Se la sequenza sq e' infinita, la computazione potrebbe non terminare
+   (esempio, se nessun elemento di sq soddisfa pred).
+
+
+*  Seq.forall :  ('a -> bool) -> seq<'a> -> bool 
+ 
+   Dati un predicato pred : 'a -> bool e una sequenza sq di tipo seq<'a>, restituisce:
+
+    o  true se tutti gli elementi di sq verificano pred;
+    o  false altrimenti. 
+          
+   Se la sequenza sq e' infinita, la computazione potrebbe non terminare
+   (esempio, se tutti gli elementi di sq soddisfano pred).
+
+
+*  Seq.cache : seq<'a> -> seq<'a>
+
+   Data una sequenza,  costruisce una sequenza cached  contenente gli stessi elementi.
+   In una sequenza cached la porzione di sequenza gia' calcolata viene memorizzata. 
+   Sono efficienti quando occorre accedere piu' volte a uno stesso elemento della sequenza.
+   (si evita di ricalcolare piu' volte lo stesso elemento).
+
+
+NOTA
+====
+
+Il tipo seq<'a> e' un sinonimo del tipo IEnumerable<'a> di .NET; 
+piu' precisamente, IEnumerable<'a> e' una interfaccia di .NET.  
+
+Un qualunque tipo T  che implementa questa interfaccia puo' essere visto come una sequenza, 
+quindi su termini di tipo T si possono applicare le funzioni definite per le sequenze.
+
+
+Esempio
+------
+
+Le liste e gli array di F#  implementano  l'interfaccia IEnumerable<'a> .
+E' quindi possibile usare su liste e array le funzioni definite in Seq.
+
+
+// applicazione di Seq.nth a una lista
+
+ Seq.nth 0 [ 0 .. 10 ] ;;  // estrae elemento di indice 0 
+ // val it : int = 0
+
+// applicazione di Seq.take a un array
+//  [| "ape" ; "bue" ; "cane" |] e' un array di stringhe e ha tipo string []
+
+
+ Seq.take 2  [| "ape" ; "bue" ; "cane" |] ;;   // sottosequenza dei primi due elementi   
+ // val it : seq<string> = seq ["ape"; "bue"]
+
+// concatenazione di una lista e un array
+Seq. append [ 1; 2 ] [| 3 ; 4 ; |] ;;
+// val it : seq<int> = seq [1; 2; 3; 4]
