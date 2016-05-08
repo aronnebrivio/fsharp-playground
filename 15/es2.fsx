@@ -231,3 +231,20 @@ Suggerimento
 
 Definire f per induzione su k; osservare come t(x,k)  puo' essere ottenuto da t(x,k-1).
 *)
+let rec pow (x:float) n =
+    match n with
+    | 1 -> x
+    | k -> x * (pow x (n-1));;
+
+let rec fact n =
+    match n with
+    | 0|1 -> 1
+    | n -> n * fact (n-1);;
+
+let f (x:float) (k:int) =
+    match k with
+    | 0 -> float 1
+    | k -> (pow x k) / float (fact k);;
+
+// test
+f 2.0 3;;
