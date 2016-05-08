@@ -196,3 +196,38 @@ Seguire lo stesso procedimento usato nella funzione lazyAnd
 let prod a b = 
     let lzy = lazy(a*b)
     lzy.Force ();;
+
+(*
+APPROSIMAZIONE FUNZIONE ESPONENZIALE MEDIANTE SERIE DI TAYLOR
+============================================================
+(** Esercizio difficile, vedi es. 11.7 del libro  **)
+
+
+La funzione esponenziale puo' essere approssimata usando la serie di Taylor (ST) definita come segue: 
+
+ e^x  =   1/0!  +   x^1 / 0!  +  x^2 / 2! + ... +  x^k/ k! + .....       (ST)
+
+Vogliamo definire una funzione che calcola e^x con una precisione fissata (un numero decimale)
+usando (ST).
+
+
+i) Sia t(x,k) il termine  della serie (ST)  di posto k, ossia:
+
+     t(x,k) :=  x^k / k!
+
+
+Definire la funzione 
+
+    f : float -> int -> float
+
+tale che
+
+   f x k = t(x,k)     dove  x:float e k:int
+       
+
+
+Suggerimento
+^^^^^^^^^^^
+
+Definire f per induzione su k; osservare come t(x,k)  puo' essere ottenuto da t(x,k-1).
+*)
