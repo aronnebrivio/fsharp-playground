@@ -248,3 +248,45 @@ let f (x:float) (k:int) =
 
 // test
 f 2.0 3;;
+
+(*
+ii) Usando la funzioni f e la funzione  sumSeq (sequenza delle somme di una sequenza)
+definita nell'esercizio precedente, definire la funzione 
+
+    apprTaylor : x -> seq<float>
+
+che, dato x:float, costruisce la sequenza infinita
+
+  t(x,0) ; t(x,0) + t(x,1) ;  t(x,0) + t(x,1) + t(x,2) ; ....     
+
+corrisponente alla sequenza infinita delle approsimazioni di e^x.
+
+Ad esempio, i primi 10 elementi della sequenza
+
+  apprTaylor 1.0 
+
+sono
+
+1.0; 2.0; 2.5; 2.666666667; 2.708333333; 2.716666667; 2.718055556; 2.718253968; 2.71827877; 2.718281526
+
+Notare che tali valori corrispondono ad  approssimazioni sempre piu' precise della costante e;
+piu' precisamente, la differenza fra un elemento della sequenza e il successivo
+diventa sempre piu' piccola.
+*)
+let rec sumSeq (sq:seq<float>) =
+    seq {
+        yield Seq.item 0 sq
+        let first = ((Seq.item 0 sq)+(Seq.item 1 sq))
+        let sq = seq {
+            yield first
+            yield! Seq.skip 2 sq
+        }
+        yield! sumSeq sq
+    };;
+
+let apprTaylor (x:float) =
+    let sq = Seq.map (f x) (Seq.initInfinite (fun y -> y))
+    sumSeq sq;;
+
+// test
+apprTaylor 1.0 |> Seq.take 10 |> Seq.toList;;
