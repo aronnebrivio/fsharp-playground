@@ -51,3 +51,22 @@ let ``if ss is an ordered set then inserting x in ss is still ordered`` arb a =
 //test (change to Check.Quick for less output)
 do Check.Verbose <| ``if ss is an ordered set then inserting x in ss is still ordered`` orderedNoRepArb;;
     
+(*
+2. The functions 
+
+     List.zip : ('a list -> 'b list -> ('a * 'b) list)
+
+    and
+
+    List.unzip : (('a * 'b) list -> 'a list * 'b list)
+
+    are inverse of each other, under the condition that they operate on lists
+    of the same length
+
+    2.1 Formulate an Arbitrary for pair of lists of ints of the same length
+*)
+let sameLen n = 
+    let ls1 = Arb.generate<int * int> |> Gen.sample 1 n
+    ls1;;
+    //let ls2 = Arb.generate<int> |> Gen.sample 1 n
+    //(ls1, ls2);;
