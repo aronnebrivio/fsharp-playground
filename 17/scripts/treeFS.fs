@@ -73,4 +73,8 @@ let rec foldBackr f tree seed =
 
     *)
 
+let count tree = toList tree |> List.length;;
 
+let map f tree = toList tree |> List.map f |> ofList;;
+
+let isSubset tree1 tree = Set.isSubset (Set (toList tree1)) (Set (toList tree));;
