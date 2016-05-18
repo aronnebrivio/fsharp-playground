@@ -1,0 +1,20 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Aggiungere all'interfaccia set.fsi le seguenti funzionni
+
+1. count : FSet<'a> -> int, che computa la cardinalità dell'insieme
+
+2. map : ('a -> 'b) -> FSet<'a> -> FSet<'b>, 
+       dove map f s = {f(x) | x in s}
+
+(tenendo presente di preservare l'invariante che il risultato sia un insieme, 
+cioè non abbia ripetizioni)
+
+3. isSubset :  FSet<'a> -> FSet<'a> -> bool, che verifica se insieme A è sottoinsieme di B
+
+
+--> Implementare le dette funzioni sia come liste che come alberi.
+
+--> Estendere i quickcheck dati a coprire le nuove funzionalità
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
