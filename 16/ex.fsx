@@ -67,6 +67,5 @@ do Check.Verbose <| ``if ss is an ordered set then inserting x in ss is still or
 *)
 let sameLen n = 
     let ls1 = Arb.generate<int * int> |> Gen.sample 1 n
-    ls1;;
-    //let ls2 = Arb.generate<int> |> Gen.sample 1 n
-    //(ls1, ls2);;
+    let ls2 = Arb.generate<int> |> Gen.sample 1 n
+    (ls1, ls2);;

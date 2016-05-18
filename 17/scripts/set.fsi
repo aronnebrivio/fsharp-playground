@@ -34,3 +34,9 @@ val union : FSet<'a> -> FSet<'a> -> FSet<'a>
 val ofList :  'a list -> FSet<'a> 
 
 val toList :  FSet<'a>  -> 'a list 
+
+val count : FSet<'a> -> int
+
+val map : ('a -> 'b) -> FSet<'a> -> FSet<'b>
+
+val isSubset :  FSet<'a> -> FSet<'a> -> bool
