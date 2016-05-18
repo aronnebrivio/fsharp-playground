@@ -59,3 +59,9 @@ let prop_u s1 (s2 : int FSet) =
 
 do Check.Quick prop_u
 *)
+
+let count (S ss) = List.length ss;;
+
+let map f (S ss) = List.map f ss |> ofList;;
+
+let isSubset (S ss1) (S ss) = Set.isSubset (Set ss1) (Set ss);;
