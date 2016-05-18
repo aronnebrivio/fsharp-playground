@@ -1,7 +1,7 @@
 // using the dll
 
 #r "listFS.dll"
-// #r "treeFS.dll"
+#r "treeFS.dll"
 open FSet
 
 // let's create a set

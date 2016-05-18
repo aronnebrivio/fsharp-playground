@@ -39,4 +39,4 @@ val count : FSet<'a> -> int
 
 val map : ('a -> 'b) -> FSet<'a> -> FSet<'b>
 
-val isSubset :  FSet<'a> -> FSet<'a> -> bool
+val isSubset :  FSet<'a> -> FSet<'a> -> bool when 'a : comparison
