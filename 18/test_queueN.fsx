@@ -20,3 +20,9 @@ let (y2, q4_2) = get q4_1;;
 // val y2 : 15
 let (y3, q5) = get q4_2;;
 // val y3 : 20
+
+isEmpty q1;; //false
+isEmpty empty;; //true
+toList q1;; // int list = [3; 5; 10]
+ofList [1..10];;
+put_list [1..10] q1 |> toList;; // int list = [3; 5; 10; 1..10]
