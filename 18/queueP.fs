@@ -25,3 +25,14 @@ let rec get = function
                     (x,{front = fs; rear = rs})
               | {front = []; rear = rs} ->  // rear non e' vuota
                     get {front = List.rev rs; rear = []};;
+
+let isEmpty {front = fs; rear = rs} =
+    match fs,rs with
+    |[],[] -> true
+    | _,_ -> false;;
+
+let toList {front = fs; rear = rs} = fs @ List.rev rs;;
+
+let ofList ls = {front = []; rear = List.rev ls};;
+
+let put_list ls {front = fs; rear = rs} = {front = fs; rear = (List.rev ls @ rs)};;
