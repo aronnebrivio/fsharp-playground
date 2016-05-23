@@ -26,16 +26,32 @@ let rpn4 = [ C 10 ; C 6 ; C 1 ; Op Minus ; Op Prod ; C 4 ; Op Minus ; C 2 ; C 5 
 let rec eval token stack =
     match token with
     | [] -> top stack
-    | x::xs -> if x=(C n) then 
-                    push n stack
-                    eval xs stack
-               else 
-                    let n1 = top stack
-                    pop stack
-                    let n2 = top stack
-                    pop stack
-                    push (n1 + n2) stack
-                    eval xs stack;;
+    | (C n)::xs -> let stk = push n stack
+                   eval xs stk
+    | (Op n)::xs -> match n with
+                    | Add -> 
+                        let (n1, stack) = pop stack
+                        let (n2, stack) = pop stack
+                        let stk = push (n2 + n1) stack
+                        eval xs stk
+                    | Minus -> 
+                        let (n1, stack) = pop stack
+                        let (n2, stack) = pop stack
+                        let stk = push (n2 - n1) stack
+                        eval xs stk
+                    | Prod -> 
+                        let (n1, stack) = pop stack
+                        let (n2, stack) = pop stack
+                        let stk = push (n2 * n1) stack
+                        eval xs stk;;
 
 let evalRpn token =
     let st = empty
+    let res = eval token st
+    res;;
+
+// test
+evalRpn rpn1;;
+evalRpn rpn2;;
+evalRpn rpn3;;
+evalRpn rpn4;;
