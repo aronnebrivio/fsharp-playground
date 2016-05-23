@@ -1,0 +1,145 @@
+STACK
+=====
+
+Implementare un modulo Stack che definisca le seguenti operazioni:
+
+-  empty : 'a Stack
+ 
+   Costante che rappresenta uno stack vuoto 
+    
+-  push : 'a -> 'a Stack -> 'a Stack
+
+   Inserisce un elemento in cima allo stack e restituisce lo stack ottenuto
+
+-  pop : 'a Stack -> 'a * 'a Stack
+
+   Toglie l'elemento in cima allo stack e restituisce la coppia
+   formata dall'elemento tolto e lo stack ottenuto.
+
+-  top : 'a Stack -> 'a
+
+   Mostra l'elemento in cima allo stack senza toglierlo
+
+-  size : 'a Stack -> int 
+
+   Calcola la dimensione dello stack (numero elementi in esso contenuti).
+
+Ricordare che lo stack va gestito in modalita' FIFO (First In First Out).
+
+Definire in Stack.fsi la segnatura e in Stack.fs l'implementazione.
+Fare opportuni test per verificare la correttezza dell'implementazione.
+
+______________________________________________________________________________
+
+REVERSE POLISH NOTATION
+=======================
+
+ ** L'esercizio utilizza il modulo Stack definito sopra  ***
+
+Una espressione aritmetica e' in Reverse Polish Notation (RPN) se l'operatore
+e' scritto dopo i suoi argomenti (notazione postfissa).
+
+Esempi di RPN:
+
+7 5 -         corrispondente a   7 - 5
+ 
+10 3 2 * +    corrispondente a   10 + (3 * 2)  
+
+10 3 + 2 *    corrispondente a   (10 + 3) * 2 
+
+10 6 1 - * 4 - 2 5 * +    corrispondente a   10 * (6 - 1)  - 4 +  2 * 5
+
+5 1 2 + 4 * + 3 −     corrispondente a   5 + ((1 + 2) * 4) − 3
+
+Notare che: 
+* le RPN non richiedono uso di parentesi (non c'e' ambiguita' nella loro struttura)
+* una RPN puo' essere vista come una successione di token, dove un token
+  e' una costante intera o un operatore.
+
+Una RPN puo' essere valutata usando eseguendo la seguente procedura,
+che utilizza uno stack di interi di supporto.
+
+=================================================================
+Input:  rpn da valutare
+
+st := stack vuoto // stack di interi
+
+tk :=  primo token di rpn 
+
+Finche' ci sono token da analizzare esegui le seguenti operazioni:
+  (1) se tk e' una costante intera 
+         poni tk in st (push)
+      altrimenti  //  tk e' un operatore
+         preleva da st due interi n1 e n2 (due pop)
+         esegui l'operazione tk su n1 e n2
+         (attenzione all'ordine degli operandi!)
+         poni in st il risultato ottenuto (push)
+  (2) Se rpn contiene ancora elementi da analizzare
+         tk := prossimo elemento di rpn  
+        // si ripete il ciclo da (1)
+
+// il ciclo termina quando in (2) non ci sono piu' elementi da analizzare
+
+Ouptut:  elemento in cima allo stack
+
+============================================
+
+Al termine del ciclo, lo stack deve contenere esattamente un elemento,
+che e' il risultato della valutazione.
+Se lo stack contiene zero oppure piu' di un elemento significa 
+che rpn non e' sintatticamente corretta.
+
+Un esempio di valutazione si puo' trovare in
+
+  https://en.wikipedia.org/wiki/Reverse_Polish_notation
+
+
+Per rappresentare una RPN usiamo i seguenti tipi:
+
+type operator = Add | Prod | Minus  // operatori ammessi
+
+type token =
+  | Op of operator
+  | C  of int
+// un token e' un operatore o un intero
+
+Una RPN e' rappresentata da una lista di token.
+Esempi di RPN:
+
+let rpn1 = [ C 7 ; C 5 ;  Op Minus ] 
+// 7 5 -   
+// 7 - 5 
+
+let rpn2 = [ C 10 ; C 3 ; C 2 ; Op Prod ; Op Add ]
+// 10 3 2 * +
+// 10 + 3 * 2  
+
+let rpn3 = [ C 10 ; C 3 ; Op Add ; C 2 ; Op Prod  ]
+// 10 3 + 2 * 
+// (10 + 3) * 2  
+
+
+let rpn4 = [ C 10 ; C 6 ; C 1 ; Op Minus ; Op Prod ; C 4 ; Op Minus ; C 2 ; C 5 ; Op Prod ;  Op Add ]
+// 10 6 1 - * 4 - 2 5 * +
+// 10 * (6 - 1)  - 4 +  2 * 5
+
+Definire la funzione 
+
+  evalRpn :  token list -> int
+  
+che valuta una RPN usando la procedura descritta sopra.
+
+Per simulare il ciclo, occorre definire la funzione ricorsiva
+  
+  eval : token list -> Stack<int> -> int
+
+che valuta una RPN usando lo stack di interi fornito come argomento.
+Se al termine della valutazione lo stack contiene zero oppure piu' di un elemento,
+va sollevata una eccezione (RPN non corretta).
+
+Verificare che:
+
+evalRpn rpn1 = 2 
+evalRpn rpn2 = 16
+evalRpn rpn3 = 26
+evalRpn rpn4 = 56
