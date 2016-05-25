@@ -38,3 +38,16 @@ let test size len =
   let exps = (Gen.sample size len Arb.generate<exp>)   
   List.map2 (fun x y -> printf "%A has type %A\n" x y) exps (List.map tpck exps);;
 
+(*
+2.  Riscrivere la funzione di test in modo 
+ i. se un termine non ha un tipo, non scrivo "<e> has type null", ma
+ "<e> is not typable"
+ii. se un termine ha tipo Some <tp>, elimino nella stampa il "Some"
+
+ (hint: mappare una funzione che fa pattern matching su (tpck e) e a
+ seconda del risultato fa una specifica printf) 
+*)
+let test2 size len =
+    let exps = (Gen.sample size len Arb.generate<exp>)
+    List.map2 (fun x y -> if Option.isSome y then printf "%A has type %A\n" x (Option.get y)
+                            else printf "%A is not typable\n" x) exps (List.map tpck exps);;
