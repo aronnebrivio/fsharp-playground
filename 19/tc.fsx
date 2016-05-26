@@ -77,20 +77,20 @@ let rec tpckf2 exp =
     match exp with
     | K(x) -> INT
     | Plus(e1,e2) -> 
-        let (t1,t2) = (tpckf e1, tpckf e2)
+        let (t1,t2) = (tpckf2 e1, tpckf2 e2)
         if t1 = INT && t2 = INT then INT
             else failwithf "%A and/or %A not an int" e1 e2
     | Nil -> LSTINT
     | Cons(e1,e2) ->
-        let (t1,t2) = (tpckf e1, tpckf e2)
+        let (t1,t2) = (tpckf2 e1, tpckf2 e2)
         if t1 = INT && t2 = LSTINT then LSTINT
             else failwithf "%A and/or %A not an int - list of int" e1 e2
     | Hd(x) -> 
-        let t = tpckf x
+        let t = tpckf2 x
         if t = LSTINT then INT
             else failwithf "%A not a list of int" x
     | Tl(x) ->
-        let t = tpckf x
+        let t = tpckf2 x
         if t = LSTINT then LSTINT
             else failwithf "%A not a list of int" x;;
 
@@ -115,3 +115,31 @@ let rec tpckf exp =
         | LSTINT -> LSTINT
         | t -> raise (TlERR (x,t));;
 
+(*
+4. Scrivere una funzione
+
+main : exp -> unit
+
+che esegue tpckf e se questa ha successo stampa per esempio
+
+main Cons (K 5, Tl Nil) 
+
+==> Cons (K 5, Tl Nil) has type LSTINT
+
+se invece fallisce, da un messagio informativo, per esempio
+
+main < cons (tl nil, 5))> 
+
+==>
+Expected types Tl Nil : INT, K 5 : LSTINT. Inferred types: (Tl Nil,
+LSTINT) and (K 5, INT)
+
+Si testi questo type checker con una version della funzione "test"
+sopra (senza printf)
+*)
+let main exp =
+    try
+        let t = tpckf exp
+        sprintf "%A has type %A" exp t
+    with
+        | Failure s -> "ERROR:" + s;;
