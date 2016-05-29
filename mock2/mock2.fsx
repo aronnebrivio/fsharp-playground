@@ -65,31 +65,34 @@ let seq1 = seq {
     yield 1
     yield! Seq.skip 5 nat
 };;
-let tmp x = [x;x];;
-let seq2 = seq {
-    yield! Seq.initInfinite (fun x -> tmp x)
-};;
+let rec tmp x = 
+    seq {
+        yield x
+        yield x
+        yield! (tmp (x + 1))
+    };;
+
+let seq2 = tmp 0;;
 
 // ii)
-let rec distinctList sq = 
-    match sq with
-    | x::(y::ss as t) -> if x = y then distinct t else x :: distinct t
-    | ss -> ss;;
-
-let distinct sq = Seq.distinct sq;;
+let rec distinct s =
+    seq {
+        let first = Seq.item 0 s
+        yield first
+        yield! (distinct (Seq.filter (fun x -> x <> first) (Seq.skip 1 s)))
+    }
 //test
 distinct seq1 |> Seq.take 20 |> Seq.toList;;
 
 //iii)
-let isEqual i sq1 sq2 =
-    let tmp1 = sq1 |> Seq.take i |> Seq.toList
-    let tmp2 = sq2 |> Seq.take i |> Seq.toList
-    let rec equalList ls1 ls2 =
-        match (ls1, ls2) with
-        | ([],[]) -> true
-        | (x1::ss1, x2::ss2) -> if x1=x2 then equalList ss1 ss2
-                                else false
-    equalList tmp1 tmp2;;
+let rec isEqual n s0 s1 =
+    match n with
+    | 0 -> true
+    | n ->
+        let (a, b) = ((Seq.item 0 s0), (Seq.item 0 s1))
+        a = b && isEqual (n - 1) (Seq.skip 1 s0) (Seq.skip 1 s1);;
 
 // test
 isEqual 20 nat (distinct seq1) ;;
+isEqual 20 nat (distinct seq2) ;;
+
