@@ -1,0 +1,174 @@
+Espressioni booleane
+====================
+
+Sia dato il tipo boolex che codifica  espressioni booleane costruite usando
+variabili proposizionali (a,b,c, ... x,y,z), costanti (true, false), negazione e congiunzione:
+	
+  type boolex = Const of bool | Var of char | Neg of boolex | And of boolex *  boolex
+
+Per esempio:
+
+   let b1 = And(Var 'b',Var 'c')  
+   let b2 = And(Neg b1, Const (3+5 = 8))
+
+Consideriamo il tipo  
+
+   type environment = list char;;
+
+che permette di valutare una espressione booleana
+con l'idea che se una variabile proposizionale  occorre nella lista, allora è vera, altrimenti è falsa.
+
+Ad esempio, se 
+
+ env1 = ['b'; 'c']   env2 =['d'] 
+
+l'espressione b e' vera in env1 e falsa in env2; d e' falsa in env1 e vera in env2.
+
+
+1. Definire la funzione di valutazione 
+
+	eval : boolex -> environment -> bool
+
+che valuta una boolex in environment. 
+
+
+Si considerino ora le espressioni booleane <ie> in forma IF, cioè generate dalla seguente grammatica:
+
+  ie ::=  k | x | if ie1 ie2 ie3
+ 
+dove k si riduce a true or false (ossia, k e' una costante booleana), x e' una variabile proposizionale,  
+ie1, ie2 e ie3 sono espressioni <ie>.
+ 
+Esempio di espressione <ie>:
+
+	if ( 3 = 4, 1<2 , if (true, x, y) )
+
+2. Definire il tipo di dati ifex che permette di rappresentare una espressione <ie>.
+
+3. Definire la funzione di valutazione 
+
+	ifeval : ifex -> environment -> bool
+
+che valuta una <ie> in environment. 
+
+Ad esempio , il valore di
+
+   ifex  (if (3 = 4, 1<2, if (true, x, y))  env
+   
+e' dato dal valore di x in env.
+
+4. Si compilino espressioni booleane in espressioni <ie> con una funzione
+
+	bool2if : boolex -> ifex
+
+mediante regole come 
+
+   not b --> if(b,false,true)
+
+Per esempio:
+
+    (not true & true) -->  if( if(true,false,true), true, false )
+
+5.  Si consideri questo diagramma che enuncia la correttezza della compilazione
+
+    ifex   --ifeval-->   bool
+      |                  /
+      |                 /
+    bool2if          eval
+      |	             /
+      |	            / 
+      |            /
+         boolex
+     
+        
+Si scriva una test QuichCheck che validi questa proprietà
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sequenze
+========
+
+i) Definire le sequenze infinite di interi
+
+ nat =  0 ; 1 ; 2 ; 3 ; 4 ......
+
+ seq1 = 0 ; 1 ; 2 ; 0 ; 3 ; 4 ; 4 ;  3 ; 1 ; 5 ; 6 ; 7 ; 8 ; 9 ; 10  ....
+
+ seq2 = 0 ; 0 ; 1 ; 1 ; 2 ; 2 ; 3 ; 3 ; 4 ; 4 ; 5 ; 5  .......
+
+ seq3 = 0 ; 1 ; 0 ; 1 ; 2 ; 0 ; 1 ; 2 ; 3 ; 0 ; 1 ; 2 ; 3 ; 4;  0 ; 1 ; 2 ; 3 ; 4 ; 5 ....
+
+Notare che la sequenza seq1 da un certo punto in poi diventa regolare (sequenza infinita  5 ; 6 ; 7 ; 8 ; 9 ; 10 ...) 
+Per seq2 e seq3 conviene definire una funzione che genera una parte della sequenza  
+
+ii) Definire la funzione 
+
+     distinct : seq<'a> -> seq<'a>   when 'a : equality
+
+che elimina i duplicati da una sequenza infinita.
+
+Ad esempio, ciascuna delle tre chiamate
+
+ distinct seq1       distinct seq2      distinct seq3
+
+deve produrre la sequenza nat
+
+
+Suggerimento 
+^^^^^^^^^^^^
+Definire una funzione ausiliaria con un parametro in piu' che memorizza gli elementi
+gia' usati nella costruzione della sequenza senza duplicati.
+
+iii) Definire la funzione
+
+  isEqual : int -> seq<'a> -> seq<'a> -> bool  when 'a : equality
+
+che verifica che i primi n elementi di due sequenze infinite siano uguali.
+
+Controllare che
+
+ 
+isEqual 20 nat (distinct seq1) ;;
+isEqual 20 nat (distinct seq2) ;;
+isEqual 20 nat (distinct seq3) ;;
+
+siano true.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ADT
+===
+
+A set can be defined via its characteristic function. In particular a
+set of integers can be seen as the function c_S : int -> bool
+
+For example the set S = {1,2} can be seen as 
+
+    ...
+    0 --> false
+    1 --> true 
+    2 --> true
+    3 --> false
+    ...
+
+In this exercise you will implement finite sets of 'a   when 'a : equality 
+as functions of type ('a -> bool).
+
+Practically speaking, the above set {1,2} will be represented as the function 
+
+	 fun x -> (x = 1 || x = 2)
+
+where you do not track (i.e., assign false to) integers  not in the set
+
+** Implement the  operations specified by the interface given in
+   cset.fsi using characterisct functions
+
+For debugging purposes, you can use the following function of type
+
+    toList :  FSet<int> -> int -> int list
+
+let toList s max =  
+        [ for x in 0 .. max do if (FSet.contains x s) then yield x ];;
+
+** Opening the dll, write a QuickCheck property that test your
+   function FSet.contains with the one in the Set library, namely Set.contains

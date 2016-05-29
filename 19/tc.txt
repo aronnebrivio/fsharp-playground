@@ -1,0 +1,146 @@
+Type checker per liste di interi 
+================================
+
+Si considerino i tipi intero e liste di interi
+
+t ::= INT | LSTINT
+
+ed un linguaggio di espressioni che contenga constanti intere, somme,
+la lista vuota, l'operazione di cons, le operazioni di testa e di coda
+di una lista:
+
+ e ::= k | e1 + e2 | nil | cons(e1,e2) | hd e | tl e  
+
+Questo porta alle dichiarazioni:
+
+type tp = INT | LSTINT
+
+type exp =
+  K of int
+  | Plus of exp * exp
+  | Nil
+  | Cons of exp * exp
+  | Hd of exp
+  | Tl of exp
+
+
+1. Scrivere un type checker, seguendo queste regole:
+  - una costante ha tipo intero (INT)
+  - una somma ha tipo intero se i due sommandi sono interi
+  - la lista vuota ha tipo LSTINT
+  - una cons(e1,e2) ha tipo LSTINT se e1 ha tipo INT e e2 ha tipo LSTINT
+  - (hd e) ha tipo INT se e ha tipo LSTINT
+  - (tl e) ha tipo LSTINT se e ha tipo LSTINT
+
+Se l'espressione sorgente non è tipabile (es. 3 + nil), allora si
+restituisca None, cioè il type checker ha tipo
+
+ tpck : exp -> tp option
+
+Esempi -- nota che la sintassi f <e> indica che f è applicata
+alla **rappresentazione** di e: 
+
+  tpck < cons(3+9,nil) > = Some(LSTINT)  
+  tpck < hd (cons(3 + 9, nil))> = Some(INT)
+  tpck <(3 + nil)> = None 
+
+- Si testi il checker con il seguente codice:
+
+#r "FsCheck"
+open FsCheck
+
+
+  
+// size è la massima dimensione di <e>, len la lunghezza della lista di esempi generata
+
+let test size len =
+  let exps = (Gen.sample size len Arb.generate<exp>)   
+  List.map2 (fun x y -> printf "%A has type %A\n" x y) exps (List.map tpck exps)
+
+2.  Riscrivere la funzione di test in modo 
+ i. se un termine non ha un tipo, non scrivo "<e> has type null", ma
+ "<e> is not typable"
+ii. se un termine ha tipo Some <tp>, elimino nella stampa il "Some"
+
+ (hint: mappare una funzione che fa pattern matching su (tpck e) e a
+ seconda del risultato fa una specifica printf) 
+
+3. Riscrivere il type checker usando eccezioni. 
+
+ tpckf : exp -> tp
+
+Dove ci sarebbe un errore di tipo si sollevi una opportuna eccezione
+che si porti dietro quei valori necessari a dare un messaggio di
+errore significativo. Per esempio:
+
+exception TlERR of (exp * tp) 
+
+descrive l'errore ottenuto cercando di tipare una expressione  Tl <exp>
+con <tp>, dove <tp> non è LISTINT. Quindi bisogna dichiarare un certo
+numero di eccezioni con gli argomenti corretti e sollevarle oppotunamente.
+
+4. Scrivere una funzione
+
+main : exp -> unit
+
+che esegue tpckf e se questa ha successo stampa per esempio
+
+main Cons (K 5, Tl Nil) 
+
+==> Cons (K 5, Tl Nil) has type LSTINT
+
+se invece fallisce, da un messagio informativo, per esempio
+
+main < cons (tl nil, 5))> 
+
+==>
+Expected types Tl Nil : INT, K 5 : LSTINT. Inferred types: (Tl Nil,
+LSTINT) and (K 5, INT)
+
+Si testi questo type checker con una version della funzione "test"
+sopra (senza printf)
+
+
+5. Un'espressione v è in forma normale (o valore) sse
+ v e'  una costante intera o nil o una cons di espressioni normali.
+
+v ::= k | nil | cons(v1,v2)
+
+scrivere una funzione value : exp -> bool che riconosca quali
+espressione sono valori
+
+6.  Scrivere un interprete di tipo
+
+  eval : exp -> exp
+
+che, data un'espressione, restituisce per esempio
+   
+      eval <(3+9)> = 12 
+      eval <( cons(3 + 9, nil) )> = <cons(12,nil)> 
+      eval <( hd (cons(3 + 9, nil)) )> = <12>
+      eval <( tl (cons(3 + 9, (cons( 2 + 2), nil))) )> = <cons(4,nil)>
+
+7. L'interprete precedente non gestisce run-time errors come Hd Nil,
+né errori da mancato type-checking come Hd (K 5). Infatti
+l'interpretazione di  eval solleva una eccezione di pattern matching
+incompleto. Scrivere un interprete **difensivo**
+
+  evalo : exp -> exp option
+
+che restituisce None nel caso dei citati errori.
+
+Si validi la cosidetta proprietà di "value soundness", per la quale se
+valuto una espressione e non sollevo una eccezione, allora
+il risultato è un valore con il seguente QuickCheck:
+
+let prop_vs e =
+  let genwt = Arb.filter (fun x -> tpck x <> None) Arb.from<exp>
+  Prop.forAll genwt (fun e ->
+                     match (evalo e) with
+                     | None -> true
+                     | Some v -> value v)
+
+do Check.Quick prop_vs
+
+8. Si adatti la proprietà di type preseservation vista a lezione a questo linguaggio
+e la si testi con QuickCheck
