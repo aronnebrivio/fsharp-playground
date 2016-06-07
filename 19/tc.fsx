@@ -142,4 +142,8 @@ let main exp =
         let t = tpckf exp
         sprintf "%A has type %A" exp t
     with
-        | Failure s -> "ERROR:" + s;;
+        | NotAnInt -> "ERROR: Not an int"
+        | PlusERR (e1,e2,t1,t2) -> "ERROR: one or both expressions does not match int"
+        | ConsERR (e1,e2,t1,t2) -> "ERROR: one or both expressions does not match int - list of int"
+        | HdERR x -> "ERROR: does not match list of int"
+        | TlERR x -> "ERROR: does not match list of int";;
