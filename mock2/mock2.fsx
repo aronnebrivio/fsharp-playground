@@ -74,6 +74,13 @@ let rec tmp x =
 
 let seq2 = tmp 0;;
 
+let rec tmp2 x =
+    seq {
+        yield! Seq.take x nat
+        yield! tmp2 (x + 1)
+    };;
+let seq3 = tmp2 2;;
+
 // ii)
 let rec distinct s =
     seq {
@@ -95,4 +102,5 @@ let rec isEqual n s0 s1 =
 // test
 isEqual 20 nat (distinct seq1) ;;
 isEqual 20 nat (distinct seq2) ;;
+isEqual 20 nat (distinct seq3) ;;
 
